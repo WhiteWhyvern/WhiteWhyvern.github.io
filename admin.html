@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Site Admin — WhiteWhyvern</title>
+<style>
+  :root{--bg:#f7f6f3;--panel:#fff;--muted:#6e6a63;--accent:#b68b56}
+  *{box-sizing:border-box}
+  body{font-family:Inter,system-ui,Segoe UI,Arial;margin:0;background:var(--bg);color:#222}
+  header{padding:16px 20px;background:var(--panel);border-bottom:1px solid #e6e6e6;display:flex;align-items:center;justify-content:space-between}
+  .container{display:grid;grid-template-columns:320px 1fr 420px;gap:18px;padding:18px;max-width:1300px;margin:18px auto}
+  .panel{background:var(--panel);padding:14px;border-radius:8px;border:1px solid #eee;min-height:140px}
+  .pages{display:flex;flex-direction:column;gap:8px}
+  .page-btn{padding:8px 10px;border-radius:6px;border:1px solid #eee;background:transparent;cursor:pointer;text-align:left}
+  .page-btn.active{background:linear-gradient(90deg,var(--accent),#c99a6b);color:#081016;font-weight:700}
+  label{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+  input[type=text],textarea{width:100%;padding:8px;border:1px solid #e6e6e6;border-radius:6px;margin-top:6px}
+  textarea{min-height:120px;font-family:inherit}
+  .toolbar{display:flex;gap:8px;margin-top:12px}
+  button{padding:8px 12px;border-radius:6px;border:0;cursor:pointer}
+  button.primary{background:var(--accent);color:#fff}
+  iframe{width:100%;height:100%;border:1px solid #e6e6e6;border-radius:6px}
+  @media (max-width:1100px){.container{grid-template-columns:1fr;grid-auto-rows:auto}}
+</style>
+</head>
+<body>
+<header>
+  <div><strong>WhiteWhyvern — Admin</strong></div>
+  <div style="color:var(--muted)">Local Editor — saves to your browser (or download edited files)</div>
+</header>
+
+<div class="container">
+  <div class="panel">
+    <strong>Pages</strong>
+    <div class="pages" id="pagesList" style="margin-top:12px"></div>
+    <div style="margin-top:12px;color:var(--muted);font-size:13px">Select a page to edit its content.</div>
+  </div>
+
+  <div class="panel" id="editorPanel">
+    <strong id="editingTitle">—</strong>
+
+    <label>Page filename (readonly)</label>
+    <input type="text" id="pageFilename" readonly>
+
+    <label>Hero title</label>
+    <input type="text" id="heroTitle">
+
+    <label>Hero subtitle</label>
+    <input type="text" id="heroSub">
+
+    <label>Hero image URL</label>
+    <input type="text" id="heroImg">
+
+    <label>Main HTML content (editable fragment)</label>
+    <textarea id="mainHtml" placeholder="Enter HTML snippet for the main article..."></textarea>
+
+    <div class="toolbar">
+      <button class="primary" id="saveBtn">Save (local)</button>
+      <button id="downloadBtn">Download HTML</button>
+      <button id="resetBtn">Reset to repo version</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <strong>Live preview</strong>
+    <div style="height:520px;margin-top:12px"><iframe id="preview" src="about:blank"></iframe></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // configuration: pages and their base template file to edit
+  const pages = [
+    {title:'CV', file:'cv.html'},
+    {title:'Art Portfolio', file:'art-portfolio.html'},
+    {title:'Scouting', file:'scouting.html'},
+    {title:'Health4NOVA', file:'health4nova.html'},
+    {title:'Green Kites', file:'green-kites.html'},
+    {title:'Dental Missions', file:'dental-missions.html'},
+    {title:'Research', file:'research.html'},
+    {title:'Awards/Recognition', file:'awards.html'},
+    {title:'Hobbies', file:'hobbies.html'},
+  ];
+
+  const pagesList = document.getElementById('pagesList');
+  const editingTitle = document.getElementById('editingTitle');
+  const pageFilename = document.getElementById('pageFilename');
+  const heroTitle = document.getElementById('heroTitle');
+  const heroSub = document.getElementById('heroSub');
+  const heroImg = document.getElementById('heroImg');
+  const mainHtml = document.getElementById('mainHtml');
+  const preview = document.getElementById('preview');
+
+  let current = null;
+  const storageKey = 'ww-admin-edits';
+
+  // initialize list
+  pages.forEach((p, idx)=>{
+    const btn = document.createElement('button');
+    btn.className = 'page-btn';
+    btn.textContent = p.title;
+    btn.addEventListener('click', ()=> selectPage(idx));
+    pagesList.appendChild(btn);
+  });
+
+  function loadStored(){
+    try{
+      return JSON.parse(localStorage.getItem(storageKey) || '{}');
+    }catch(e){ return {}; }
+  }
+
+  function saveStored(obj){
+    localStorage.setItem(storageKey, JSON.stringify(obj));
+  }
+
+  // fetch base template from repo (GET). If not available via raw path, fallback to blank template.
+  async function fetchRepoTemplate(filename){
+    try{
+      // attempt relative fetch (works when admin.html served from the repo)
+      const res = await fetch(filename);
+      if(!res.ok) throw new Error('not found');
+      return await res.text();
+    }catch(e){
+      // fallback small scaffold
+      return `<!doctype html><html><head><meta charset="utf-8"><title>${filename}</title></head><body><header></header><section class="project-hero" style="background-image:url('https://placehold.co/1400x700');height:40vh"></section><main><article><!-- content --></article></main></body></html>`;
+    }
+  }
+
+  // parse template to extract hero text and main fragment (simple heuristics)
+  function parseTemplate(html){
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const hero = doc.querySelector('.project-hero');
+    const heroBg = hero ? (hero.style.backgroundImage || '') : '';
+    const bgUrlMatch = heroBg.match(/url\\(['"]?(.*?)['"]?\\)/);
+    const img = bgUrlMatch ? bgUrlMatch[1] : '';
+    const h1 = hero ? (hero.querySelector('h1')?.textContent || '') : '';
+    const p = hero ? (hero.querySelector('.lead')?.textContent || hero.querySelector('p')?.textContent || '') : '';
+    const main = doc.querySelector('main')?.innerHTML || '';
+    return {img, h1, p, main};
+  }
+
+  // build HTML from fields (simple page scaffold matching your template pattern)
+  function buildHtml({title, heroTitleVal, heroSubVal, heroImgVal, mainVal}){
+    return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${title} — WhiteWhyvern</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="topbar" aria-hidden="true"><div class="brand"><div class="logo">WW</div><div class="title"><div class="name">WhiteWhyvern</div><div class="sub">${title}</div></div></div></header>
+<section class="project-hero" style="height:40vh;background-image:url('${heroImgVal}');background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:28px;">
+  <div><h1 style="margin:0">${heroTitleVal}</h1>${heroSubVal?`<p class="lead" style="margin:8px 0;color:#6e6a63">${heroSubVal}</p>`:''}</div>
+</section>
+<main style="max-width:900px;margin:20px auto;padding:20px">${mainVal}</main>
+<footer>© <span id="year"></span> WhiteWhyvern</footer>
+<script src="main.js"></script></body></html>`;
+  }
+
+  // select page
+  async function selectPage(idx){
+    current = pages[idx];
+    // update UI
+    Array.from(pagesList.children).forEach((b,i)=> b.classList.toggle('active', i===idx));
+    editingTitle.textContent = current.title;
+    pageFilename.value = current.file;
+
+    // load stored edits
+    const stored = loadStored();
+    if(stored[current.file]){
+      const s = stored[current.file];
+      heroTitle.value = s.heroTitle || '';
+      heroSub.value = s.heroSub || '';
+      heroImg.value = s.heroImg || '';
+      mainHtml.value = s.mainHtml || '';
+      updatePreview();
+      return;
+    }
+
+    // otherwise fetch base template and parse
+    const tpl = await fetchRepoTemplate(current.file);
+    const parsed = parseTemplate(tpl);
+    heroTitle.value = parsed.h1 || current.title;
+    heroSub.value = parsed.p || '';
+    heroImg.value = parsed.img || 'https://placehold.co/1400x700/efe7dd/8b6b4a?text='+encodeURIComponent(current.title);
+    mainHtml.value = parsed.main || `<article style="background:#fff;padding:18px;border:1px solid #ebe7e2"><h2>Overview</h2><p style="color:#6e6a63">Edit this content for ${current.title}.</p></article>`;
+    updatePreview();
+  }
+
+  // update live preview iframe
+  function updatePreview(){
+    if(!current) return;
+    const html = buildHtml({
+      title: current.title,
+      heroTitleVal: heroTitle.value,
+      heroSubVal: heroSub.value,
+      heroImgVal: heroImg.value,
+      mainVal: mainHtml.value
+    });
+    const doc = preview.contentWindow.document;
+    doc.open();
+    doc.write(html);
+    doc.close();
+    // set footer year in preview (main.js in preview will do but ensure)
+  }
+
+  // save current edits to localStorage
+  document.getElementById('saveBtn').addEventListener('click', ()=>{
+    if(!current) return alert('Select a page first');
+    const stored = loadStored();
+    stored[current.file] = {
+      heroTitle: heroTitle.value,
+      heroSub: heroSub.value,
+      heroImg: heroImg.value,
+      mainHtml: mainHtml.value,
+      savedAt: new Date().toISOString()
+    };
+    saveStored(stored);
+    alert('Saved locally in your browser.');
+  });
+
+  // download edited HTML file
+  document.getElementById('downloadBtn').addEventListener('click', ()=>{
+    if(!current) return alert('Select a page first');
+    const html = buildHtml({
+      title: current.title,
+      heroTitleVal: heroTitle.value,
+      heroSubVal: heroSub.value,
+      heroImgVal: heroImg.value,
+      mainVal: mainHtml.value
+    });
+    const blob = new Blob([html], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = current.file;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+
+  // reset to repo version (remove local stored)
+  document.getElementById('resetBtn').addEventListener('click', async ()=>{
+    if(!current) return;
+    if(!confirm('Reset local edits for this page?')) return;
+    const stored = loadStored();
+    delete stored[current.file];
+    saveStored(stored);
+    await selectPage(pages.findIndex(p=>p.file===current.file)); // re-load
+  });
+
+  // live-update preview when fields change
+  [heroTitle, heroSub, heroImg, mainHtml].forEach(el=>{
+    el.addEventListener('input', updatePreview);
+  });
+
+  // initialize first page
+  selectPage(0);
+})();
+</script>
+</body>
+</html>
