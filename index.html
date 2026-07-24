@@ -3,52 +3,74 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>WhiteWhyvern — Cinematic Portfolio</title>
+<title>WhiteWhyvern — Portfolio Mosaic</title>
 <style>
   :root{
-    --umble:#3b2f2a;       /* dark umber */
-    --cool-1:#bfc7cc;      /* cool grey light */
-    --cool-2:#94a3b8;      /* cool grey mid */
-    --bg:#0b0d0f;          /* near-black page bg */
-    --card:#111216;
-    --accent:#d9a86e;      /* warm accent for contrast */
-    --glass:rgba(255,255,255,0.03);
-    --maxw:1100px;
-    --nav-h:64px;
+    --umble:#3b2f2a; --cool-1:#bfc7cc; --accent:#d9a86e; --bg:#0b0d0f; --card:#111216; --maxw:1100px;
   }
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#071018);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:var(--cool-1);-webkit-font-smoothing:antialiased}
-  /* Top solid nav bar (persistent) */
-  header{position:sticky;top:0;z-index:40;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:linear-gradient(90deg,var(--umble),#0f1416);box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+  body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--cool-1);-webkit-font-smoothing:antialiased}
+  header{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:linear-gradient(90deg,var(--umble),#0f1416);box-shadow:0 6px 20px rgba(2,6,23,0.6)}
   .brand{display:flex;align-items:center;gap:12px}
   .logo{width:44px;height:44;border-radius:8px;background:linear-gradient(180deg,var(--accent),#c78a46);display:flex;align-items:center;justify-content:center;font-weight:800;color:#081016}
-  nav{display:flex;gap:10px;align-items:center}
-  .nav-tab{background:transparent;border:0;padding:10px 14px;border-radius:8px;color:var(--cool-1);font-weight:700;cursor:pointer;letter-spacing:0.4px}
-  .nav-tab[aria-selected="true"]{background:rgba(255,255,255,0.03);color:var(--accent);box-shadow:inset 0 -3px 0 rgba(255,255,255,0.02)}
-  /* Hero full-bleed */
-  .hero-wrap{width:100%;height:68vh;min-height:420px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-  .hero-image{position:absolute;inset:0;background-image:url('https://placehold.co/1600x1000/2b2623/efe6db?text=Aesthetic+Photo+Placeholder');background-size:cover;background-position:center;filter:contrast(1.02) saturate(.95);transform:scale(1.02)}
-  .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,13,15,0.24),rgba(11,13,15,0.6));backdrop-filter:blur(2px)}
-  .hero-content{position:relative;z-index:3;max-width:var(--maxw);padding:28px;color:var(--cool-1);text-align:left}
-  .hero-title{font-size:clamp(36px,6vw,84px);line-height:0.95;margin:0;color:var(--cool-1);font-weight:900;letter-spacing:-1px;text-shadow:0 18px 50px rgba(3,6,8,0.6)}
-  .hero-sub{margin-top:12px;color:var(--cool-2);font-size:16px;max-width:60ch}
-  /* content container */
   main{max-width:var(--maxw);margin:28px auto;padding:0 20px 60px}
-  .card{background:linear-gradient(180deg,var(--card),var(--glass));border-radius:12px;padding:18px;box-shadow:0 20px 60px rgba(2,6,23,0.6)}
-  /* Panels */
-  .panels{margin-top:18px}
-  .panel{display:none;padding:18px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
-  .panel[aria-hidden="false"]{display:block}
-  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-  .work{border-radius:10px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);min-height:140px}
-  .work h4{margin:0 0 8px 0;color:var(--accent)}
-  footer{max-width:var(--maxw);margin:36px auto 80px;color:var(--cool-2);text-align:center;font-size:13px}
-  /* small responsive tweaks */
-  @media(max-width:680px){
-    header{padding:0 12px}
-    .hero-content{padding:18px}
-    .hero-title{font-size:36px}
+  h1{margin:0 0 14px 0;color:var(--cool-1);font-size:28px}
+
+  /* Mosaic container: maintains a rectangle composed of differently sized tiles.
+     Adjust grid-template-areas to change layout. */
+  .mosaic-wrap{background:linear-gradient(180deg,var(--card),rgba(255,255,255,0.02));padding:14px;border-radius:12px;box-shadow:0 20px 60px rgba(2,6,23,0.6)}
+  .mosaic{
+    display:grid;
+    gap:8px;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: 80px;
+    grid-template-areas:
+      "a a a a a b b b c c d d"
+      "a a a a a b b b c c d d"
+      "e e f f f g g h h i i i"
+      "e e f f f g g h h i i i";
+    align-items:stretch;
   }
+
+  /* tile placements */
+  .tile-a{grid-area:a}
+  .tile-b{grid-area:b}
+  .tile-c{grid-area:c}
+  .tile-d{grid-area:d}
+  .tile-e{grid-area:e}
+  .tile-f{grid-area:f}
+  .tile-g{grid-area:g}
+  .tile-h{grid-area:h}
+  .tile-i{grid-area:i}
+
+  /* link + image styling */
+  .mosaic a{display:block;position:relative;overflow:hidden;border-radius:8px}
+  .mosaic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s cubic-bezier(.2,.9,.25,1),filter .3s}
+  .mosaic a:hover img{transform:scale(1.06);filter:brightness(1.05) saturate(1.06)}
+  /* caption overlay */
+  .caption{position:absolute;left:12px;bottom:12px;color:#fff;font-weight:700;text-shadow:0 6px 18px rgba(0,0,0,0.6);pointer-events:none;font-size:14px}
+  /* ensure rectangle keeps proportion on small screens */
+  @media (max-width:900px){
+    .mosaic{grid-template-columns:repeat(6,1fr);grid-auto-rows:70px;grid-template-areas:
+      "a a b b c c"
+      "a a b b d d"
+      "e f f g g i"
+      "e h h g g i";}
+  }
+  @media (max-width:520px){
+    .mosaic{grid-template-columns:repeat(2,1fr);grid-auto-rows:140px;grid-template-areas:
+      "a a"
+      "b b"
+      "c c"
+      "d d"
+      "e e"
+      "f f"
+      "g g"
+      "h h"
+      "i i";}
+  }
+
+  small{color:var(--cool-1);opacity:.9}
 </style>
 </head>
 <body>
@@ -57,128 +79,80 @@
     <div class="logo">WW</div>
     <div>
       <div style="font-weight:800;color:var(--cool-1)">WhiteWhyvern</div>
-      <div style="font-size:12px;color:var(--cool-2)">art · science · cinematic</div>
+      <div style="font-size:12px;color:var(--cool-1);opacity:.8">portfolio mosaic (click tiles)</div>
     </div>
   </div>
-
-  <nav role="tablist" aria-label="Top navigation">
-    <!-- placeholder tab names -->
-    <button class="nav-tab" role="tab" aria-selected="true" aria-controls="panel-home" id="tab-home" tabindex="0">Home</button>
-    <button class="nav-tab" role="tab" aria-selected="false" aria-controls="panel-portfolio" id="tab-portfolio" tabindex="-1">Portfolio</button>
-    <button class="nav-tab" role="tab" aria-selected="false" aria-controls="panel-about" id="tab-about" tabindex="-1">About</button>
-    <button class="nav-tab" role="tab" aria-selected="false" aria-controls="panel-contact" id="tab-contact" tabindex="-1">Contact</button>
+  <nav aria-label="top nav">
+    <!-- keep these placeholder tabs if you want -->
+    <button style="background:transparent;border:0;color:var(--cool-1);font-weight:700;cursor:pointer">Home</button>
+    <button style="background:transparent;border:0;color:var(--cool-1);font-weight:700;cursor:pointer">Portfolio</button>
+    <button style="background:transparent;border:0;color:var(--cool-1);font-weight:700;cursor:pointer">About</button>
+    <button style="background:transparent;border:0;color:var(--cool-1);font-weight:700;cursor:pointer">Contact</button>
   </nav>
 </header>
 
-<section class="hero-wrap" aria-labelledby="hero-title">
-  <div class="hero-image" role="img" aria-label="Large aesthetic background image"></div>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <h1 id="hero-title" class="hero-title">WHITEWHYVERN</h1>
-    <p class="hero-sub">A cinematic portfolio that balances artistic expression and scientific rigor. Scroll down to explore projects, case studies, and the creative systems that power them.</p>
-  </div>
-</section>
-
 <main>
-  <div class="card panels" id="panels">
-    <section id="panel-home" class="panel" role="tabpanel" aria-labelledby="tab-home" aria-hidden="false">
-      <h3 style="margin-top:0;color:var(--accent)">Overview</h3>
-      <p style="color:var(--cool-2)">Brief intro and highlights. Use this area to place a striking sentence or two summarizing your approach, notable exhibitions, or prominent collaborations.</p>
-      <div style="margin-top:12px" class="grid">
-        <div class="work">
-          <h4>Featured Work — Placeholder</h4>
-          <p style="color:var(--cool-2);margin:0">Short blurb about a signature project; highlight tech or concept.</p>
-        </div>
-        <div class="work">
-          <h4>Experiment — Placeholder</h4>
-          <p style="color:var(--cool-2);margin:0">A generative experiment or visualization summary.</p>
-        </div>
-        <div class="work">
-          <h4>Collaboration — Placeholder</h4>
-          <p style="color:var(--cool-2);margin:0">A short description of a collaboration or commission.</p>
-        </div>
-      </div>
-    </section>
+  <h1>Featured Works</h1>
 
-    <section id="panel-portfolio" class="panel" role="tabpanel" aria-labelledby="tab-portfolio" aria-hidden="true">
-      <h3 style="margin-top:0;color:var(--accent)">Portfolio</h3>
-      <div class="grid" style="margin-top:12px">
-        <div class="work"><h4>Project A</h4><p style="color:var(--cool-2);margin:0">Placeholder image and text for a project.</p></div>
-        <div class="work"><h4>Project B</h4><p style="color:var(--cool-2);margin:0">Placeholder image and text for a project.</p></div>
-        <div class="work"><h4>Project C</h4><p style="color:var(--cool-2);margin:0">Placeholder image and text for a project.</p></div>
-      </div>
-    </section>
+  <div class="mosaic-wrap">
+    <div class="mosaic" role="list">
+      <!-- Tile A: large block (5 cols x 2 rows) -->
+      <a class="tile-a" role="listitem" href="https://example.com/project-a" target="_blank" rel="noopener">
+        <img src="https://placehold.co/1200x800/3b2f2a/bfc7cc?text=Project+A" alt="Project A preview">
+        <div class="caption">Project A</div>
+      </a>
 
-    <section id="panel-about" class="panel" role="tabpanel" aria-labelledby="tab-about" aria-hidden="true">
-      <h3 style="margin-top:0;color:var(--accent)">About</h3>
-      <p style="color:var(--cool-2)">Short biography: your practice, methodology, and the intersection of art + data + code. Provide context that supports the cinematic visual identity.</p>
-    </section>
+      <!-- Tile B -->
+      <a class="tile-b" role="listitem" href="https://example.com/project-b" target="_blank" rel="noopener">
+        <img src="https://placehold.co/800x600/2b2f33/94a3b8?text=Project+B" alt="Project B preview">
+        <div class="caption">Project B</div>
+      </a>
 
-    <section id="panel-contact" class="panel" role="tabpanel" aria-labelledby="tab-contact" aria-hidden="true">
-      <h3 style="margin-top:0;color:var(--accent)">Contact</h3>
-      <p style="color:var(--cool-2)">Placeholder contact info or a simple form (replace with your endpoint when ready).</p>
-      <form id="contact-form" style="margin-top:12px;display:grid;gap:8px;max-width:520px">
-        <input name="name" placeholder="Name" style="padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--cool-1)">
-        <input name="email" type="email" placeholder="Email" style="padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--cool-1)">
-        <textarea name="message" rows="4" placeholder="Message" style="padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--cool-1)"></textarea>
-        <button type="submit" style="background:var(--accent);color:#081016;border:0;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer">Send</button>
-      </form>
-    </section>
+      <!-- Tile C -->
+      <a class="tile-c" role="listitem" href="https://example.com/project-c" target="_blank" rel="noopener">
+        <img src="https://placehold.co/800x1000/44362f/bfc7cc?text=Project+C" alt="Project C preview">
+        <div class="caption">Project C</div>
+      </a>
+
+      <!-- Tile D -->
+      <a class="tile-d" role="listitem" href="https://example.com/project-d" target="_blank" rel="noopener">
+        <img src="https://placehold.co/800x600/302826/94a3b8?text=Project+D" alt="Project D preview">
+        <div class="caption">Project D</div>
+      </a>
+
+      <!-- Tile E -->
+      <a class="tile-e" role="listitem" href="https://example.com/project-e" target="_blank" rel="noopener">
+        <img src="https://placehold.co/900x900/5a4a40/bfc7cc?text=Project+E" alt="Project E preview">
+        <div class="caption">Project E</div>
+      </a>
+
+      <!-- Tile F -->
+      <a class="tile-f" role="listitem" href="https://example.com/project-f" target="_blank" rel="noopener">
+        <img src="https://placehold.co/700x500/2f2523/94a3b8?text=Project+F" alt="Project F preview">
+        <div class="caption">Project F</div>
+      </a>
+
+      <!-- Tile G -->
+      <a class="tile-g" role="listitem" href="https://example.com/project-g" target="_blank" rel="noopener">
+        <img src="https://placehold.co/700x700/3f352f/bfc7cc?text=Project+G" alt="Project G preview">
+        <div class="caption">Project G</div>
+      </a>
+
+      <!-- Tile H -->
+      <a class="tile-h" role="listitem" href="https://example.com/project-h" target="_blank" rel="noopener">
+        <img src="https://placehold.co/700x500/2e2725/94a3b8?text=Project+H" alt="Project H preview">
+        <div class="caption">Project H</div>
+      </a>
+
+      <!-- Tile I -->
+      <a class="tile-i" role="listitem" href="https://example.com/project-i" target="_blank" rel="noopener">
+        <img src="https://placehold.co/1200x600/4a362e/bfc7cc?text=Project+I" alt="Project I preview">
+        <div class="caption">Project I</div>
+      </a>
+    </div>
   </div>
+
+  <p style="margin-top:16px;color:var(--cool-1)"><small>Click any tile to open its page. Replace the placeholder src and href values with your images and targets.</small></p>
 </main>
-
-<footer>
-  © <span id="year"></span> WhiteWhyvern — art & science
-</footer>
-
-<script>
-(function(){
-  // Top nav tabs control panels (keeps nav bar tabs persistent)
-  const tabs = Array.from(document.querySelectorAll('nav [role="tab"]'));
-  const panels = Array.from(document.querySelectorAll('[role="tabpanel"]'));
-  function setActive(idx){
-    tabs.forEach((t,i)=>{
-      const sel = i===idx;
-      t.setAttribute('aria-selected', sel);
-      t.tabIndex = sel ? 0 : -1;
-      const pid = t.getAttribute('aria-controls');
-      const panel = document.getElementById(pid);
-      if(panel) panel.setAttribute('aria-hidden', !sel);
-    });
-    // update hash for deep-linking
-    history.replaceState(null, '', '#'+tabs[idx].getAttribute('aria-controls'));
-  }
-  tabs.forEach((t,i)=>{
-    t.addEventListener('click', ()=> setActive(i));
-    t.addEventListener('keydown', (e)=>{
-      if(e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'Home' || e.key === 'End'){
-        let ni = i;
-        if(e.key === 'ArrowRight') ni = (i+1)%tabs.length;
-        if(e.key === 'ArrowLeft') ni = (i-1+tabs.length)%tabs.length;
-        if(e.key === 'Home') ni = 0;
-        if(e.key === 'End') ni = tabs.length-1;
-        e.preventDefault(); setActive(ni);
-      }
-    });
-  });
-
-  // Handle initial hash
-  const h = location.hash.replace('#','');
-  if(h){
-    const idx = tabs.findIndex(t => t.getAttribute('aria-controls') === h);
-    if(idx >= 0) setActive(idx);
-  }
-
-  // simple contact demo
-  document.getElementById('contact-form')?.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    alert('Message sent (demo). Replace with backend.');
-    e.target.reset();
-  });
-
-  // footer year
-  document.getElementById('year').textContent = new Date().getFullYear();
-})();
-</script>
 </body>
 </html>
