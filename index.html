@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header>
+<header class="topbar" aria-hidden="true">
   <div class="brand">
     <div class="logo">WW</div>
     <div class="title">
@@ -15,59 +15,54 @@
       <div class="sub">light‑academia • art + systems</div>
     </div>
   </div>
-  <nav role="tablist" aria-label="Top navigation">
-    <button class="nav-tab" role="tab" aria-selected="true" aria-controls="panel-home" id="tab-home">Home</button>
-    <button class="nav-tab" role="tab" aria-selected="false" aria-controls="panel-portfolio" id="tab-portfolio">Portfolio</button>
-    <button class="nav-tab" role="tab" aria-selected="false" aria-controls="panel-about" id="tab-about">About</button>
-    <button class="nav-tab" role="tab" aria-selected="false" aria-controls="panel-contact" id="tab-contact">Contact</button>
-  </nav>
 </header>
 
-<section class="hero" aria-label="Hero">
-  <div class="hero-inner">
-    <h1>WHITEWHYVERN</h1>
-    <p class="lead">A light‑toned portfolio blending classical references and generative systems.</p>
-  </div>
-</section>
-
 <main>
-  <div class="mosaic-wrap">
-    <div class="mosaic" role="list">
-      <a class="tile tile-a" role="listitem" href="./project-1.html">
-        <img src="https://placehold.co/1200x900/efe7dd/8b6b4a?text=Project+1" alt="Project 1">
-        <div class="caption">Project 1</div>
-      </a>
+  <section class="grid-wrap" aria-label="Projects grid">
+    <a class="grid-tile" href="./cv.html">
+      <img src="https://placehold.co/1400x1000/efe7dd/8b6b4a?text=CV" alt="CV">
+      <div class="tile-label">CV</div>
+    </a>
 
-      <a class="tile tile-b" role="listitem" href="./project-2.html">
-        <img src="https://placehold.co/800x600/f6efe6/9b7f63?text=Project+2" alt="Project 2">
-        <div class="caption">Project 2</div>
-      </a>
+    <a class="grid-tile" href="./art-portfolio.html">
+      <img src="https://placehold.co/1400x1000/f6efe6/9b7f63?text=Art+Portfolio" alt="Art Portfolio">
+      <div class="tile-label">Art Portfolio</div>
+    </a>
 
-      <a class="tile tile-c" role="listitem" href="./project-3.html">
-        <img src="https://placehold.co/800x900/f8f4ef/a78a5b?text=Project+3" alt="Project 3">
-        <div class="caption">Project 3</div>
-      </a>
+    <a class="grid-tile" href="./scouting.html">
+      <img src="https://placehold.co/1400x1000/f8f4ef/a78a5b?text=Scouting" alt="Scouting">
+      <div class="tile-label">Scouting</div>
+    </a>
 
-      <a class="tile tile-d" role="listitem" href="./project-4.html">
-        <img src="https://placehold.co/800x600/efe8df/8b6b4a?text=Project+4" alt="Project 4">
-        <div class="caption">Project 4</div>
-      </a>
+    <a class="grid-tile" href="./health4nova.html">
+      <img src="https://placehold.co/1400x1000/efe8df/8b6b4a?text=Health4NOVA" alt="Health4NOVA">
+      <div class="tile-label">Health4NOVA</div>
+    </a>
 
-      <a class="tile tile-e" role="listitem" href="./project-5.html">
-        <img src="https://placehold.co/800x1000/f7f2eb/af8f66?text=Project+5" alt="Project 5">
-        <div class="caption">Project 5</div>
-      </a>
+    <a class="grid-tile" href="./green-kites.html">
+      <img src="https://placehold.co/1400x1000/f7f2eb/af8f66?text=Green+Kites" alt="Green Kites">
+      <div class="tile-label">Green Kites</div>
+    </a>
 
-      <a class="tile tile-f" role="listitem" href="./project-6.html">
-        <img src="https://placehold.co/1200x600/f2ebe3/9a7a56?text=Project+6" alt="Project 6">
-        <div class="caption">Project 6</div>
-      </a>
-    </div>
-  </div>
+    <a class="grid-tile" href="./dental-missions.html">
+      <img src="https://placehold.co/1400x1000/f2ebe3/9a7a56?text=Dental+Missions" alt="Dental Missions">
+      <div class="tile-label">Dental Missions</div>
+    </a>
 
-  <section id="panel-home" class="panel" aria-hidden="false">
-    <h2>Overview</h2>
-    <p class="muted">Click any tile above to open its dedicated page. Replace the placeholder images with your own assets in the same filenames or update src values.</p>
+    <a class="grid-tile" href="./research.html">
+      <img src="https://placehold.co/1400x1000/efe7dd/8b6b4a?text=Research" alt="Research">
+      <div class="tile-label">Research</div>
+    </a>
+
+    <a class="grid-tile" href="./awards.html">
+      <img src="https://placehold.co/1400x1000/f6efe6/9b7f63?text=Awards" alt="Awards">
+      <div class="tile-label">Awards / Recognition</div>
+    </a>
+
+    <a class="grid-tile" href="./hobbies.html">
+      <img src="https://placehold.co/1400x1000/f8f4ef/a78a5b?text=Hobbies" alt="Hobbies">
+      <div class="tile-label">Hobbies</div>
+    </a>
   </section>
 </main>
 
