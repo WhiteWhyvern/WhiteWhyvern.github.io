@@ -6,171 +6,235 @@
 <title>WhiteWhyvern — Personal Site</title>
 <style>
   :root{
-    --bg:#f7f8fb; --card:#ffffff; --accent:#2563eb; --muted:#6b7280; --glass: rgba(255,255,255,0.6);
+    --bg:#0f1724; /* dark cinematic base */
+    --card:#071026;
+    --accent:#7ee7ff; /* electric cyan */
+    --accent-2:#ff7bd1; /* magenta accent */
+    --muted:#9aa7b3;
+    --glass: rgba(255,255,255,0.02);
+    --mono: "SFMono-Regular", ui-monospace, "Roboto Mono", "Segoe UI Mono", monospace;
   }
-  [data-theme="dark"]{
-    --bg:#0b1020; --card:#0f1724; --accent:#60a5fa; --muted:#9ca3af; --glass: rgba(255,255,255,0.03);
+  [data-theme="light"]{
+    --bg:linear-gradient(180deg,#f5f8ff,#eef6ff);
+    --card:#ffffff;
+    --accent:#1e40af;
+    --accent-2:#b91cdb;
+    --muted:#344054;
+    --glass: rgba(255,255,255,0.6);
   }
+
   *{box-sizing:border-box}
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:0; background:linear-gradient(180deg,var(--bg),#e9f0ff20); color:var(--muted); min-height:100vh}
-  header{display:flex;align-items:center;justify-content:space-between;padding:20px 18px;gap:12px}
-  .brand{display:flex;align-items:center;gap:12px}
-  .logo{width:56px;height:56px;border-radius:12px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;box-shadow:0 6px 18px rgba(37,99,235,0.12)}
-  main{max-width:980px;margin:18px auto;padding:18px}
-  .card{background:linear-gradient(180deg,var(--card),var(--glass));border-radius:12px;padding:18px;box-shadow:0 10px 30px rgba(2,6,23,0.06)}
-  .intro{display:flex;gap:18px;align-items:flex-start}
-  .intro img{width:160px;border-radius:12px;flex-shrink:0}
-  h1{margin:0 0 6px 0;color:var(--accent);font-size:20px}
-  p.lead{margin:0;color:var(--muted);font-size:14px}
+  html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:var(--muted);background:var(--bg);-webkit-font-smoothing:antialiased}
+  body{display:flex;flex-direction:column;min-height:100vh;transition:background .35s ease}
 
-  /* Tabs */
-  .tabs{display:flex;gap:8px;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:10px;margin-top:16px;flex-wrap:wrap}
-  .tab{background:transparent;border:0;padding:8px 12px;border-radius:10px;font-weight:700;color:var(--muted);cursor:pointer}
-  .tab[aria-selected="true"]{background:linear-gradient(180deg,rgba(37,99,235,.08),transparent);color:var(--accent);box-shadow:inset 0 -2px 0 var(--accent)}
-  .tabpanel{display:none;padding-top:14px}
-  .tabpanel[aria-hidden="false"]{display:block}
+  header{display:flex;align-items:center;justify-content:space-between;padding:22px;gap:16px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{
+    width:72px;height:72px;border-radius:14px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#021124;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;box-shadow:0 18px 50px rgba(2,6,23,0.6),0 6px 20px rgba(34,211,238,0.08);
+  }
+  .title{line-height:1}
+  .title .name{font-weight:900;color:var(--accent);font-size:18px;letter-spacing:0.6px}
+  .title .tag{font-size:12px;color:var(--muted);margin-top:4px}
 
-  /* Settings form */
-  .setting-row{display:flex;align-items:center;justify-content:space-between;padding:10px;border-radius:10px;background:transparent}
-  .setting-row + .setting-row{margin-top:8px}
-  .toggle{display:inline-flex;align-items:center;gap:8px}
-  .switch{width:44px;height:26px;background:#e6e9ef;border-radius:999px;position:relative;cursor:pointer}
-  .knob{width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:all .18s;box-shadow:0 2px 6px rgba(2,6,23,0.12)}
-  [data-on="true"] .switch{background:linear-gradient(90deg,var(--accent),#7cc0ff)}
-  [data-on="true"] .knob{left:21px}
+  main{max-width:1100px;margin:18px auto;padding:18px;flex:1;width:100%}
 
-  /* Layout */
-  .grid{display:grid;grid-template-columns:240px 1fr;gap:18px}
-  @media(max-width:820px){.grid{grid-template-columns:1fr;}.intro img{width:100%;max-width:320px}}
+  /* Hero card with geometric art + molecule grid */
+  .hero{
+    position:relative;overflow:hidden;border-radius:18px;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.00));
+    box-shadow:0 30px 80px rgba(2,6,23,0.6);
+    display:grid;grid-template-columns:420px 1fr;gap:20px;align-items:center;
+  }
+  @media(max-width:980px){.hero{grid-template-columns:1fr; padding:20px}}
+  .hero-left{z-index:2}
+  h1{margin:0;font-size:36px;color:var(--accent);line-height:1.02}
+  p.lead{margin-top:10px;color:var(--muted);font-size:15px;max-width:44ch}
+  .cta{margin-top:18px;display:flex;gap:12px;align-items:center}
+  .btn{padding:12px 16px;border-radius:12px;border:0;cursor:pointer;font-weight:700}
+  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#021124;box-shadow:0 10px 30px rgba(124,231,255,0.08)}
+  .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
 
-  small{color:var(--muted);display:block;margin-top:6px}
-  footer{max-width:980px;margin:18px auto;padding:10px 18px;color:var(--muted);font-size:13px;text-align:center}
-  a {color:var(--accent); text-decoration:none}
+  /* Artistic geometric background on right */
+  .hero-art{position:relative;height:260px;border-radius:12px;overflow:visible;display:flex;align-items:center;justify-content:center}
+  .canvas{
+    position:relative;width:100%;height:100%;
+    background:
+      radial-gradient(circle at 10% 10%, rgba(126,231,255,0.06) 0 6%, transparent 20%),
+      radial-gradient(circle at 80% 20%, rgba(255,123,209,0.05) 0 6%, transparent 18%),
+      linear-gradient(120deg, rgba(34,211,238,0.03), transparent 30%);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  /* hex grid / molecule nodes */
+  .molecule{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr);gap:12px;padding:20px;pointer-events:none}
+  .node{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.06);box-shadow:0 6px 14px rgba(2,6,23,0.6);transform:translateZ(0)}
+  .node.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 10px 30px rgba(124,231,255,0.12)}
+  .node.big{width:26px;height:26px}
+
+  /* Tabs and panels (bigger, bolder) */
+  .tabs{display:flex;gap:8px;margin-top:20px}
+  .tab{background:transparent;border:0;padding:10px 14px;border-radius:12px;font-weight:800;color:var(--muted);cursor:pointer}
+  .tab[aria-selected="true"]{background:rgba(255,255,255,0.02);color:var(--accent);box-shadow:inset 0 -2px 0 var(--accent)}
+  .panel{margin-top:18px;padding:18px;border-radius:12px;background:var(--card);box-shadow:0 10px 30px rgba(2,6,23,0.45)}
+  .grid-2{display:grid;grid-template-columns:1fr 300px;gap:18px}
+  @media(max-width:980px){.grid-2{grid-template-columns:1fr}}
+
+  /* Settings styling simplified */
+  .setting-row{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:10px;background:transparent}
+  .switch{width:48px;height:28px;background:#0b1220;border-radius:999px;position:relative;cursor:pointer;border:1px solid rgba(255,255,255,0.04)}
+  .knob{width:22px;height:22px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:all .2s}
+  [data-on="true"] .switch{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+  [data-on="true"] .knob{left:23px}
+
+  footer{margin:26px auto;text-align:center;color:var(--muted);font-size:13px}
+  small{color:var(--muted)}
+
+  /* subtle animations */
+  .node, .logo {transition:transform .45s cubic-bezier(.2,.9,.25,1), box-shadow .25s}
+  .logo:hover{transform:translateY(-4px) scale(1.03)}
 </style>
 </head>
-<body data-theme="light">
+<body data-theme="dark">
 <header>
   <div class="brand">
     <div class="logo">WW</div>
-    <div>
-      <div style="font-weight:800">WhiteWhyvern</div>
-      <div style="font-size:13px;color:var(--muted)">A personal website containing all my perks and qualities!</div>
+    <div class="title">
+      <div class="name">WhiteWhyvern</div>
+      <div class="tag">artistic • scientific • bold</div>
     </div>
   </div>
-  <div style="display:flex;gap:10px;align-items:center">
-    <button id="open-settings" style="background:transparent;border:0;color:var(--muted);cursor:pointer;font-weight:700">Settings ⚙️</button>
+  <div>
+    <button id="open-settings" class="btn btn-ghost">Settings ⚙️</button>
   </div>
 </header>
 
 <main>
-  <section class="card">
-    <div class="intro">
-      <img src="https://content.codecademy.com/articles/github-pages-via-web-app/happy-ice-cream.gif" alt="fun gif">
-      <div>
-        <h1>WhiteWhyvern</h1>
-        <p class="lead">A personal website containing all my perks and qualities! Welcome — explore the tabs to learn more.</p>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-left">
+      <h1 id="hero-title">WhiteWhyvern</h1>
+      <p class="lead">I craft striking interfaces where art meets data — generative visuals, crisp interaction, and thoughtful engineering. Explore projects and tune the experience.</p>
+      <div class="cta">
+        <button class="btn btn-primary" id="primary-action">See Projects</button>
+        <button class="btn btn-ghost" id="secondary-action">About</button>
+      </div>
 
-        <div role="tablist" aria-label="Main tabs" class="tabs" id="tabs">
-          <button class="tab" role="tab" aria-selected="true" aria-controls="panel-home" id="tab-home" tabindex="0">Home</button>
-          <button class="tab" role="tab" aria-selected="false" aria-controls="panel-about" id="tab-about" tabindex="-1">About</button>
-          <button class="tab" role="tab" aria-selected="false" aria-controls="panel-projects" id="tab-projects" tabindex="-1">Projects</button>
-          <button class="tab" role="tab" aria-selected="false" aria-controls="panel-settings" id="tab-settings" tabindex="-1">Settings</button>
-        </div>
+      <div role="tablist" aria-label="Main tabs" class="tabs" id="tabs" style="margin-top:18px">
+        <button class="tab" role="tab" aria-selected="true" aria-controls="panel-home" id="tab-home" tabindex="0">Home</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-about" id="tab-about" tabindex="-1">About</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-projects" id="tab-projects" tabindex="-1">Projects</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-settings" id="tab-settings" tabindex="-1">Settings</button>
       </div>
     </div>
 
-    <div style="margin-top:14px">
-      <div id="panel-home" class="tabpanel" role="tabpanel" aria-labelledby="tab-home" aria-hidden="false">
-        <h3 style="margin-top:0;color:var(--accent)">Welcome</h3>
-        <p style="color:var(--muted)">This is your landing area. Share a short intro, links, or highlights. Edit this text to present yourself.</p>
-      </div>
-
-      <div id="panel-about" class="tabpanel" role="tabpanel" aria-labelledby="tab-about" aria-hidden="true">
-        <div class="grid">
-          <div>
-            <h3 style="margin-top:0">About</h3>
-            <p style="color:var(--muted)">Add details about yourself here: background, skills, interests.</p>
-            <small>Tip: keep it concise and use links to portfolio projects below.</small>
-          </div>
-          <div>
-            <h4 style="margin-bottom:6px">Quick facts</h4>
-            <ul style="margin:0;color:var(--muted)">
-              <li>Location: Your City</li>
-              <li>Roles: Developer, Designer</li>
-              <li>Tools: HTML, CSS, JavaScript</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div id="panel-projects" class="tabpanel" role="tabpanel" aria-labelledby="tab-projects" aria-hidden="true">
-        <h3 style="margin-top:0">Projects</h3>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:8px">
-          <div style="padding:12px;border-radius:10px;background:rgba(37,99,235,0.04)">
-            <strong>Project One</strong>
-            <p style="color:var(--muted);margin:6px 0">Short description.</p>
-            <a href="#">View</a>
-          </div>
-          <div style="padding:12px;border-radius:10px;background:rgba(37,99,235,0.04)">
-            <strong>Project Two</strong>
-            <p style="color:var(--muted);margin:6px 0">Short description.</p>
-            <a href="#">View</a>
-          </div>
-        </div>
-      </div>
-
-      <div id="panel-settings" class="tabpanel" role="tabpanel" aria-labelledby="tab-settings" aria-hidden="true">
-        <h3 style="margin-top:0">Settings</h3>
-        <div style="max-width:720px;margin-top:8px">
-          <div class="card" style="padding:12px">
-            <div class="setting-row" id="theme-row" data-on="false">
-              <div>
-                <strong>Theme</strong>
-                <small>Toggle between Light and Dark modes</small>
-              </div>
-              <div class="toggle" role="button" tabindex="0" aria-pressed="false">
-                <div class="switch"><div class="knob"></div></div>
-              </div>
-            </div>
-
-            <div class="setting-row" style="margin-top:10px">
-              <div>
-                <strong>Profile visibility</strong>
-                <small>Show profile publicly</small>
-              </div>
-              <label style="display:inline-flex;align-items:center;gap:8px">
-                <input id="profile-visible" type="checkbox">
-              </label>
-            </div>
-
-            <div class="setting-row" style="margin-top:10px">
-              <div>
-                <strong>Notifications</strong>
-                <small>Email me updates and messages</small>
-              </div>
-              <label style="display:inline-flex;align-items:center;gap:8px">
-                <input id="notify" type="checkbox">
-              </label>
-            </div>
-
-            <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
-              <button id="save-settings" style="background:var(--accent);color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer">Save</button>
-              <button id="reset-settings" style="background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:8px;cursor:pointer">Reset</button>
-            </div>
-          </div>
+    <div class="hero-art">
+      <div class="canvas" aria-hidden="true">
+        <div class="molecule" id="molecule">
+          <!-- nodes generated by JS -->
         </div>
       </div>
     </div>
   </section>
+
+  <div id="panels" style="margin-top:20px">
+    <div id="panel-home" class="panel" role="tabpanel" aria-labelledby="tab-home" aria-hidden="false">
+      <div class="grid-2">
+        <div>
+          <h3 style="margin-top:0;color:var(--accent)">Welcome</h3>
+          <p style="color:var(--muted)">This landing blends expressive visuals with a data-driven sensibility — a portfolio for creative systems, generative art, and experimental UI.</p>
+          <ul style="color:var(--muted)">
+            <li>Generative pieces — shaders, SVG systems</li>
+            <li>Interactive data visualizations</li>
+            <li>Design systems & polished front-end code</li>
+          </ul>
+        </div>
+        <aside style="padding:12px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)">
+          <strong style="color:var(--accent)">Quick links</strong>
+          <div style="margin-top:8px"><a href="#panel-projects" style="color:var(--accent)">Projects</a><br><small>Showcase & demos</small></div>
+        </aside>
+      </div>
+    </div>
+
+    <div id="panel-about" class="panel" role="tabpanel" aria-labelledby="tab-about" aria-hidden="true" style="margin-top:18px">
+      <h3 style="margin-top:0;color:var(--accent)">About</h3>
+      <p style="color:var(--muted)">An engineer who composes visuals with code — blending generative art, scientific visualization, and interface craft.</p>
+    </div>
+
+    <div id="panel-projects" class="panel" role="tabpanel" aria-labelledby="tab-projects" aria-hidden="true" style="margin-top:18px">
+      <h3 style="margin-top:0;color:var(--accent)">Projects</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px">
+        <div style="padding:14px;border-radius:12px;background:rgba(255,255,255,0.02)">
+          <strong>Generative Flora</strong>
+          <p style="color:var(--muted);margin:6px 0">Interactive plant-like systems driven by noise and physics.</p>
+        </div>
+        <div style="padding:14px;border-radius:12px;background:rgba(255,255,255,0.02)">
+          <strong>Data Galaxy</strong>
+          <p style="color:var(--muted);margin:6px 0">Aesthetic visualizations mapping multidimensional datasets.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-settings" class="panel" role="tabpanel" aria-labelledby="tab-settings" aria-hidden="true" style="margin-top:18px">
+      <h3 style="margin-top:0;color:var(--accent)">Settings</h3>
+      <div style="max-width:720px;margin-top:8px">
+        <div style="padding:12px;border-radius:12px;background:transparent">
+          <div class="setting-row" id="theme-row" data-on="true">
+            <div>
+              <strong>Theme</strong>
+              <small>Toggle between dark and light</small>
+            </div>
+            <div class="switch" role="button" tabindex="0" aria-pressed="true"><div class="knob"></div></div>
+          </div>
+
+          <div class="setting-row" style="margin-top:10px">
+            <div>
+              <strong>Profile visibility</strong>
+              <small>Show profile publicly</small>
+            </div>
+            <label><input id="profile-visible" type="checkbox"></label>
+          </div>
+
+          <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+            <button id="save-settings" class="btn btn-primary">Save</button>
+            <button id="reset-settings" class="btn btn-ghost">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <footer>
-  © <span id="year"></span> WhiteWhyvern — Built with HTML/CSS/JS
+  © <span id="year"></span> WhiteWhyvern — art + science
 </footer>
 
 <script>
 (function(){
-  // Tabs: click + keyboard navigation (ArrowLeft/ArrowRight/Home/End)
+  // Generate molecule nodes
+  const mol = document.getElementById('molecule');
+  if(mol){
+    mol.innerHTML = '';
+    const cols = 6, rows = 4;
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const n = document.createElement('div');
+        n.className = 'node';
+        if(Math.random() > 0.85) n.classList.add('big','active');
+        else if(Math.random() > 0.88) n.classList.add('active');
+        mol.appendChild(n);
+      }
+    }
+    // gentle animation loop
+    const nodes = Array.from(mol.children);
+    setInterval(()=>{
+      nodes.forEach(n=>{
+        if(Math.random() > 0.9) n.classList.toggle('active');
+        n.style.transform = `translateY(${(Math.random()-0.5)*6}px) translateX(${(Math.random()-0.5)*6}px)`;
+      });
+    },900);
+  }
+
+  // Tabs behavior
   const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
   function updateSelection(newIndex){
     tabs.forEach((t,i)=>{
@@ -182,75 +246,60 @@
       if(panel) panel.setAttribute('aria-hidden', !selected);
     });
     tabs[newIndex].focus();
-    history.replaceState(null,'', '#'+tabs[newIndex].getAttribute('aria-controls'));
   }
-  tabs.forEach((tab, index)=>{
+  tabs.forEach((tab,index)=>{
     tab.addEventListener('click', ()=> updateSelection(index));
     tab.addEventListener('keydown', (e)=>{
-      let dir = 0;
-      if(e.key === 'ArrowRight') dir = 1;
-      if(e.key === 'ArrowLeft') dir = -1;
-      if(e.key === 'Home'){ e.preventDefault(); updateSelection(0); return; }
-      if(e.key === 'End'){ e.preventDefault(); updateSelection(tabs.length-1); return; }
-      if(dir !== 0){ e.preventDefault(); let ni = (index + dir + tabs.length) % tabs.length; updateSelection(ni); }
+      let dir=0;
+      if(e.key==='ArrowRight') dir=1;
+      if(e.key==='ArrowLeft') dir=-1;
+      if(e.key==='Home'){ e.preventDefault(); updateSelection(0); return; }
+      if(e.key==='End'){ e.preventDefault(); updateSelection(tabs.length-1); return; }
+      if(dir!==0){ e.preventDefault(); updateSelection((index+dir+tabs.length)%tabs.length); }
     });
   });
 
-  // Deep linking (hash)
-  const hash = location.hash.replace('#','');
-  if(hash){
-    const i = tabs.findIndex(t => t.getAttribute('aria-controls') === hash);
-    if(i >= 0) updateSelection(i);
-  }
-
-  // Settings panel open button toggles Settings tab
-  document.getElementById('open-settings').addEventListener('click', ()=>{
-    const idx = tabs.findIndex(t => t.id === 'tab-settings');
-    if(idx >= 0) updateSelection(idx);
+  // Buttons wired to actions
+  document.getElementById('primary-action').addEventListener('click', ()=> {
+    const idx = tabs.findIndex(t => t.getAttribute('aria-controls') === 'panel-projects'); if(idx>=0) updateSelection(idx);
+  });
+  document.getElementById('secondary-action').addEventListener('click', ()=> {
+    const idx = tabs.findIndex(t => t.getAttribute('aria-controls') === 'panel-about'); if(idx>=0) updateSelection(idx);
   });
 
-  // Theme toggle
+  // Settings button opens tab
+  document.getElementById('open-settings').addEventListener('click', ()=> {
+    const idx = tabs.findIndex(t => t.id === 'tab-settings'); if(idx>=0) updateSelection(idx);
+  });
+
+  // Theme toggle with stronger contrast defaults
   const themeRow = document.getElementById('theme-row');
-  const themeToggle = themeRow.querySelector('.toggle');
-  function setTheme(isDark){
-    document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    themeRow.setAttribute('data-on', isDark ? 'true' : 'false');
-    themeToggle.setAttribute('aria-pressed', !!isDark);
-    localStorage.setItem('ww-theme-dark', isDark ? '1' : '0');
+  const themeSwitch = themeRow.querySelector('.switch');
+  function setTheme(isLight){
+    document.body.setAttribute('data-theme', isLight ? 'light' : 'dark');
+    themeRow.setAttribute('data-on', isLight ? 'false' : 'true');
+    themeSwitch.setAttribute('aria-pressed', !!isLight ? 'false' : 'true');
+    localStorage.setItem('ww-theme-light', isLight ? '1' : '0');
   }
-  // init from storage
-  setTheme(localStorage.getItem('ww-theme-dark') === '1');
+  // init
+  const storedLight = localStorage.getItem('ww-theme-light') === '1';
+  setTheme(storedLight);
+  function toggleTheme(){ setTheme(!(document.body.getAttribute('data-theme')==='light')); }
+  themeSwitch.addEventListener('click', toggleTheme);
+  themeSwitch.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); toggleTheme(); } });
 
-  function toggleTheme(){
-    setTheme(document.body.getAttribute('data-theme') !== 'dark');
-  }
-  themeToggle.addEventListener('click', toggleTheme);
-  themeToggle.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTheme(); } });
-
-  // Profile & notifications -> persist simple settings
-  const profileVisible = document.getElementById('profile-visible');
-  const notify = document.getElementById('notify');
-  function loadPrefs(){
-    profileVisible.checked = localStorage.getItem('ww-profile-visible') === '1';
-    notify.checked = localStorage.getItem('ww-notify') === '1';
-  }
-  function savePrefs(){
-    localStorage.setItem('ww-profile-visible', profileVisible.checked ? '1' : '0');
-    localStorage.setItem('ww-notify', notify.checked ? '1' : '0');
-    alert('Settings saved (local demo).');
-  }
-  document.getElementById('save-settings').addEventListener('click', savePrefs);
-  document.getElementById('reset-settings').addEventListener('click', ()=>{
-    localStorage.removeItem('ww-theme-dark');
-    localStorage.removeItem('ww-profile-visible');
-    localStorage.removeItem('ww-notify');
-    setTheme(false);
-    loadPrefs();
-    alert('Settings reset to defaults.');
+  // Save/reset settings (local only)
+  document.getElementById('save-settings').addEventListener('click', ()=>{
+    localStorage.setItem('ww-profile-visible', document.getElementById('profile-visible').checked ? '1' : '0');
+    alert('Settings saved locally (demo).');
   });
-  loadPrefs();
+  document.getElementById('reset-settings').addEventListener('click', ()=>{
+    localStorage.removeItem('ww-theme-light'); localStorage.removeItem('ww-profile-visible');
+    setTheme(false); document.getElementById('profile-visible').checked = false;
+    alert('Settings reset.');
+  });
 
-  // Set footer year
+  // footer year
   document.getElementById('year').textContent = new Date().getFullYear();
 })();
 </script>
