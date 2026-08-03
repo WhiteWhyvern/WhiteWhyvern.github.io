@@ -6,12 +6,11 @@
 <title>WhiteWhyvern — Portfolio</title>
 <style>
   :root {
-    /* Light Academia Colors */
-    --c-light-bg: 251, 248, 243; /* #fbf8f3 */
-    --c-light-text: 47, 43, 38;  /* #2f2b26 */
-    /* Dark Academic Colors */
-    --c-dark-bg: 26, 24, 22;     /* #1a1816 */
-    --c-dark-text: 224, 220, 213; /* #e0dcd5 */
+    /* Color RGB values for interpolation */
+    --c-bg-light: 251, 248, 243; /* #fbf8f3 */
+    --c-text-light: 47, 43, 38;  /* #2f2b26 */
+    --c-bg-dark: 26, 24, 22;     /* #1a1816 */
+    --c-text-dark: 224, 220, 213; /* #e0dcd5 */
     
     --accent: #b68b56;
   }
@@ -21,10 +20,11 @@
   body {
     margin: 0;
     padding: 0;
-    background-color: rgb(var(--c-light-bg));
-    color: rgb(var(--c-light-text));
+    background-color: rgb(var(--c-bg-light));
+    color: rgb(var(--c-text-light));
     font-family: Georgia, serif;
     overflow-x: hidden;
+    line-height: 1.6;
   }
 
   /* Fixed Hero Layer */
@@ -36,25 +36,27 @@
     height: 100vh;
     z-index: 10;
     pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Linking the image to the SVG mask below */
+    /* This connects the image to the SVG mask defined below */
     mask: url(#mask-circles);
     -webkit-mask: url(#mask-circles);
   }
 
   .hero-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    width: 100%;
+    position: relative;
     z-index: 12;
+    text-align: center;
   }
 
   .hero-content h1 {
@@ -64,27 +66,26 @@
     font-weight: 900;
   }
 
-  /* SVG Mask setup - hidden from view */
+  /* Hidden SVG Mask */
   #svg-mask-element {
     position: absolute;
     width: 0;
     height: 0;
   }
 
-  /* Content Sections */
+  /* Sections Layout */
   main {
     position: relative;
     z-index: 5;
-    margin-top: 120vh; /* Spacing to allow scroll effect visibility */
+    margin-top: 130vh; /* Delay content until fade is deep */
   }
 
   section {
-    min-height: 70vh;
+    min-height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 80px 5vw;
-    transition: opacity 0.6s;
+    padding: 100px 5vw;
   }
 
   .container {
@@ -95,12 +96,14 @@
     align-items: center;
   }
 
+  /* Image on one side, Text on other */
   .snippet-img {
     flex: 1.2;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 4 / 3;
     background: #000;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(182, 139, 86, 0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   }
 
   .snippet-img img {
@@ -108,7 +111,7 @@
     height: 100%;
     object-fit: cover;
     display: block;
-    filter: sepia(20%) contrast(110%);
+    filter: sepia(30%) contrast(110%);
   }
 
   .snippet-info {
@@ -118,12 +121,13 @@
   .snippet-info h2 {
     font-size: 2.8rem;
     margin: 0 0 15px;
+    letter-spacing: -1px;
   }
 
   .snippet-info p {
-    font-size: 1.15rem;
-    line-height: 1.7;
+    font-size: 1.1rem;
     margin-bottom: 25px;
+    opacity: 0.85;
   }
 
   .btn {
@@ -132,45 +136,47 @@
     border: 1px solid currentColor;
     text-decoration: none;
     color: inherit;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
-    transition: 0.3s;
+    transition: 0.3s ease;
   }
 
   .btn:hover {
     background: #fff;
     color: #000;
+    border-color: #fff;
   }
 
-  /* Alternating layout */
+  /* Alternating Left/Right layout */
   section:nth-child(even) .container {
     flex-direction: row-reverse;
   }
 
   footer {
-    padding: 60px;
+    padding: 80px 20px;
     text-align: center;
     font-size: 0.8rem;
-    letter-spacing: 2px;
-    opacity: 0.5;
+    letter-spacing: 3px;
+    opacity: 0.6;
   }
 
   @media (max-width: 850px) {
     .container { flex-direction: column !important; gap: 30px; }
-    .snippet-img { width: 100%; }
+    .snippet-img { width: 100%; height: 300px; }
   }
 </style>
 </head>
 <body>
 
-  <!-- Hidden SVG for Multiple Circle Masking -->
+  <!-- The Generative Circle Mask -->
   <svg id="svg-mask-element">
     <mask id="mask-circles">
+      <!-- White shows the image, Black hides it -->
       <rect width="100%" height="100%" fill="white" />
       <g id="circle-grid" fill="black">
-        <!-- Circles will be injected here by JavaScript -->
+        <!-- JS will inject circles here -->
       </g>
     </mask>
   </svg>
@@ -178,41 +184,117 @@
   <div class="hero-wrapper" id="heroWrapper">
     <div class="hero-content" id="heroText">
       <h1>WHITEWHYVERN</h1>
-      <p style="letter-spacing: 5px; opacity: 0.7;">ART &bull; SCIENCE &bull; STRUCTURE</p>
+      <p style="letter-spacing: 6px; font-weight: 300; opacity: 0.7;">SCIENTIFIC &bull; ARTISTIC &bull; RESEARCH</p>
     </div>
-    <img src="https://placehold.co/2000x1400/efe7dd/8b6b4a?text=Your+Portrait" class="hero-image">
+    <!-- Replace with your actual portrait URL -->
+    <img src="https://placehold.co/2000x1400/efe7dd/8b6b4a?text=Your+Portrait" class="hero-image" id="heroImg">
   </div>
 
   <main>
+    <!-- 1. CV -->
     <section id="cv">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x450/111/444?text=CV" alt="CV"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=CV" alt="CV"></div>
         <div class="snippet-info">
           <h2>CV</h2>
-          <p>A comprehensive record of my professional journey, including formal education, technical skills, and research history.</p>
-          <a href="cv.html" class="btn">Explore History</a>
+          <p>A formal record of academic milestones, professional experience, and technical proficiencies acquired through rigorous study.</p>
+          <a href="cv.html" class="btn">View Document</a>
         </div>
       </div>
     </section>
 
+    <!-- 2. Art Portfolio -->
     <section id="art">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x450/111/444?text=Art" alt="Art"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Art+Portfolio" alt="Art"></div>
         <div class="snippet-info">
           <h2>Art Portfolio</h2>
-          <p>Where creativity meets technique. A selection of works ranging from traditional sketches to digital compositions.</p>
+          <p>An exploration of form and medium, showcasing a collection of works that bridge the gap between tradition and experiment.</p>
           <a href="art-portfolio.html" class="btn">View Gallery</a>
         </div>
       </div>
     </section>
 
+    <!-- 3. Scouting -->
     <section id="scouting">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x450/111/444?text=Scouting" alt="Scouting"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Scouting" alt="Scouting"></div>
         <div class="snippet-info">
           <h2>Scouting</h2>
-          <p>Projects and leadership roles within the scouting community, emphasizing resilience and outdoor craft.</p>
+          <p>Leadership, resilience, and community engagement developed through years of dedicated outdoor craft and mentorship.</p>
           <a href="scouting.html" class="btn">Read More</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Health4NOVA -->
+    <section id="health">
+      <div class="container">
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Health4NOVA" alt="Health"></div>
+        <div class="snippet-info">
+          <h2>Health4NOVA</h2>
+          <p>Public health advocacy and resources tailored to local communities, emphasizing accessibility and wellness.</p>
+          <a href="health4nova.html" class="btn">View Initiative</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Green Kites International -->
+    <section id="green">
+      <div class="container">
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Green+Kites" alt="Green Kites"></div>
+        <div class="snippet-info">
+          <h2>Green Kites</h2>
+          <p>Environmental programs and global sustainability efforts led by the International Association.</p>
+          <a href="green-kites.html" class="btn">View association</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Dental Missions -->
+    <section id="dental">
+      <div class="container">
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Dental+Missions" alt="Dental"></div>
+        <div class="snippet-info">
+          <h2>Dental Missions</h2>
+          <p>Humanitarian aid providing oral healthcare to underserved populations through targeted clinic missions.</p>
+          <a href="dental-missions.html" class="btn">Mission Logs</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Research -->
+    <section id="research">
+      <div class="container">
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Research" alt="Research"></div>
+        <div class="snippet-info">
+          <h2>Research</h2>
+          <p>In-depth scientific inquiry into complex systems, featuring published papers and raw data analysis.</p>
+          <a href="research.html" class="btn">View Research</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Awards -->
+    <section id="awards">
+      <div class="container">
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Awards" alt="Awards"></div>
+        <div class="snippet-info">
+          <h2>Awards</h2>
+          <p>A list of formal recognitions, honors, and grants received for contributions to the arts and sciences.</p>
+          <a href="awards.html" class="btn">View Honors</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Hobbies -->
+    <section id="hobbies">
+      <div class="container">
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Hobbies" alt="Hobbies"></div>
+        <div class="snippet-info">
+          <h2>Hobbies</h2>
+          <p>Personal pursuits and side projects that stimulate curiosity outside of formal professional spheres.</p>
+          <a href="hobbies.html" class="btn">Learn More</a>
         </div>
       </div>
     </section>
@@ -227,28 +309,27 @@
     const heroText = document.getElementById('heroText');
     const heroWrapper = document.getElementById('heroWrapper');
     
-    // 1. Create a Grid of Circles in the SVG Mask
-    const rows = 10;
-    const cols = 15;
+    // Create the grid of circles
+    const rows = 12;
+    const cols = 18;
     const circles = [];
 
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        // Distribute circles across the viewbox
         circle.setAttribute("cx", `${(j / (cols - 1)) * 100}%`);
         circle.setAttribute("cy", `${(i / (rows - 1)) * 100}%`);
-        circle.setAttribute("r", "0"); // Start with 0 radius
+        circle.setAttribute("r", "0");
         circleGrid.appendChild(circle);
         circles.push(circle);
       }
     }
 
-    // 2. Smooth Color Interpolation Function
-    function lerpColor(color1, color2, factor) {
-      const r = Math.round(color1[0] + factor * (color2[0] - color1[0]));
-      const g = Math.round(color1[1] + factor * (color2[1] - color1[1]));
-      const b = Math.round(color1[2] + factor * (color2[2] - color1[2]));
+    // Color mixing function
+    function lerpColor(c1, c2, f) {
+      const r = Math.round(c1[0] + f * (c2[0] - c1[0]));
+      const g = Math.round(c1[1] + f * (c2[1] - c1[1]));
+      const b = Math.round(c1[2] + f * (c2[2] - c1[2]));
       return `rgb(${r}, ${g}, ${b})`;
     }
 
@@ -257,34 +338,33 @@
     const lightText = [47, 43, 38];
     const darkText = [224, 220, 213];
 
-    // 3. Scroll Logic
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
       const vh = window.innerHeight;
       
-      // Calculate scroll factor (0 to 1) over the first 1.2 viewport heights
-      const factor = Math.min(1, scrollY / (vh * 1.2));
+      // Calculate how far we are through the fade (0 to 1)
+      const factor = Math.min(1, scrollY / (vh * 1.5));
 
-      // A. Animate Mask Circles
-      // We want circles to grow at slightly different times for a "seamless" feel
-      circles.forEach((circle, index) => {
-        // Individual offset based on position to create a dappled growth
-        const offset = (index / circles.length) * 0.3;
-        const circleFactor = Math.max(0, Math.min(1, (factor - offset) / 0.7));
-        // Growing radius from 0 to about 15% of the screen width
-        circle.setAttribute("r", `${circleFactor * 15}%`);
+      // 1. Dappled Circle Masking
+      circles.forEach((c, index) => {
+        // Offset makes circles grow at different times
+        const offset = (index / circles.length) * 0.4;
+        const cFactor = Math.max(0, Math.min(1, (factor - offset) / 0.6));
+        c.setAttribute("r", `${cFactor * 16}%`); // circles grow to 16% width
       });
 
-      // B. Smooth Color Transition
-      document.body.style.backgroundColor = lerpColor(lightBg, darkBg, factor);
-      document.body.style.color = lerpColor(lightText, darkText, factor);
+      // 2. Smooth Background & Text Transition
+      const bgColor = lerpColor(lightBg, darkBg, factor);
+      const textColor = lerpColor(lightText, darkText, factor);
+      document.body.style.backgroundColor = bgColor;
+      document.body.style.color = textColor;
 
-      // C. Hero Text and Opacity
-      heroText.style.opacity = 1 - (factor * 2);
+      // 3. Hero Text and cleanup
+      heroText.style.opacity = 1 - (factor * 3);
       if (factor >= 1) {
-        heroWrapper.style.display = 'none';
+        heroWrapper.style.visibility = 'hidden';
       } else {
-        heroWrapper.style.display = 'block';
+        heroWrapper.style.visibility = 'visible';
       }
     });
 
