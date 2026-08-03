@@ -6,11 +6,11 @@
 <title>WhiteWhyvern — Portfolio</title>
 <style>
   :root {
-    --c-bg-light: #fbf8f3;
-    --c-text-light: #2f2b26;
-    /* Transition colors (interpolated via JS) */
-    --current-bg: #fbf8f3;
-    --current-text: #2f2b26;
+    --c-bg-light: 251, 248, 243;
+    --c-text-light: 47, 43, 38;
+    /* Default darks */
+    --c-bg-dark: 26, 24, 22;
+    --c-text-dark: 224, 220, 213;
   }
 
   * { box-sizing: border-box; }
@@ -18,21 +18,25 @@
   body {
     margin: 0;
     padding: 0;
-    background-color: var(--current-bg);
-    color: var(--current-text);
+    background-color: rgb(var(--c-bg-light));
+    color: rgb(var(--c-text-light));
     font-family: Georgia, serif;
     overflow-x: hidden;
     line-height: 1.6;
+    /* Smooth color morphing */
+    transition: background-color 0.8s ease, color 0.8s ease;
   }
 
-  /* Fixed Hero Section */
+  /* Fixed Hero Layer */
   .hero-wrapper {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100vh;
     z-index: 10;
     pointer-events: none;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .hero-image {
@@ -40,31 +44,15 @@
     top: 0; left: 0;
     width: 100%; height: 100%;
     object-fit: cover;
-    z-index: 1;
-  }
-
-  /* The Halftone "Curtain" that rises from the bottom */
-  .halftone-overlay {
-    position: absolute;
-    bottom: -100%; /* Start below screen */
-    left: 0;
-    width: 100%;
-    height: 200%; /* Double height for smooth fade */
-    z-index: 2;
-    background-image: radial-gradient(circle, #fbf8f3 20%, transparent 25%);
-    background-size: 30px 30px; /* Size of the halftone dots */
-    background-color: #fbf8f3; /* Solid color matches light theme */
-    transition: transform 0.1s linear;
+    /* This links to the Halftone SVG Mask */
+    mask: url(#halftone-mask);
+    -webkit-mask: url(#halftone-mask);
   }
 
   .hero-content {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 3;
+    position: relative;
+    z-index: 12;
     text-align: center;
-    width: 100%;
   }
 
   .hero-content h1 {
@@ -74,11 +62,14 @@
     font-weight: 900;
   }
 
-  /* Main Content Layout */
+  /* SVG Mask - Hidden */
+  #svg-mask-element { position: absolute; width: 0; height: 0; }
+
+  /* Content Layout */
   main {
     position: relative;
     z-index: 5;
-    margin-top: 150vh; /* Spacing for the scroll effect */
+    margin-top: 150vh; /* Space for the scroll transition */
   }
 
   section {
@@ -87,7 +78,6 @@
     align-items: center;
     justify-content: center;
     padding: 100px 5vw;
-    transition: background-color 0.8s ease;
   }
 
   .container {
@@ -98,189 +88,214 @@
     align-items: center;
   }
 
-  /* Rectangular image on one side, text on other */
   .snippet-img {
     flex: 1.2;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 4 / 3;
     background: #000;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 15px 45px rgba(0,0,0,0.5);
   }
 
   .snippet-img img {
     width: 100%; height: 100%;
     object-fit: cover;
     display: block;
-    filter: sepia(10%) contrast(110%);
+    filter: sepia(20%) grayscale(20%);
   }
 
   .snippet-info { flex: 1; }
   .snippet-info h2 { font-size: 3rem; margin: 0 0 15px; letter-spacing: -1px; }
-  .snippet-info p { font-size: 1.15rem; margin-bottom: 25px; opacity: 0.8; }
+  .snippet-info p { font-size: 1.1rem; margin-bottom: 25px; opacity: 0.8; }
 
   .btn {
     display: inline-block;
-    padding: 14px 35px;
+    padding: 12px 30px;
     border: 1px solid currentColor;
     text-decoration: none;
     color: inherit;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
     transition: 0.3s ease;
   }
 
-  .btn:hover { background: #fff; color: #000; border-color: #fff; }
+  .btn:hover { background: #fff; color: #000; }
 
-  /* Alternating Left/Right layout */
-  section:nth-child(even) .container {
-    flex-direction: row-reverse;
-  }
+  section:nth-child(even) .container { flex-direction: row-reverse; }
 
-  footer { padding: 80px 20px; text-align: center; opacity: 0.5; font-size: 0.8rem; letter-spacing: 3px; }
+  footer { padding: 100px 20px; text-align: center; opacity: 0.5; font-size: 0.8rem; letter-spacing: 3px; }
 
   @media (max-width: 850px) {
     .container { flex-direction: column !important; text-align: center; }
-    .snippet-img { width: 100%; aspect-ratio: 4/3; }
   }
 </style>
 </head>
 <body>
 
+  <!-- The Halftone SVG Mask -->
+  <svg id="svg-mask-element">
+    <mask id="halftone-mask">
+      <!-- White background: Image is visible -->
+      <rect width="100%" height="100%" fill="white" />
+      <!-- Black circles: Image is hidden. JS will populate these. -->
+      <g id="dot-grid" fill="black"></g>
+    </mask>
+  </svg>
+
   <div class="hero-wrapper" id="heroWrapper">
     <div class="hero-content" id="heroText">
       <h1>WHITEWHYVERN</h1>
-      <p style="letter-spacing: 8px; font-weight: 300; opacity: 0.7;">ART &bull; SCIENCE &bull; STRUCTURE</p>
+      <p style="letter-spacing: 8px; opacity: 0.6;">SCIENTIFIC &bull; ARTISTIC &bull; RESEARCH</p>
     </div>
-    <!-- Replace with your actual portrait URL -->
     <img src="https://placehold.co/2000x1400/efe7dd/8b6b4a?text=Your+Portrait" class="hero-image" id="heroImg">
-    <!-- This overlay rises as you scroll -->
-    <div class="halftone-overlay" id="halftone"></div>
   </div>
 
   <main>
     <!-- Section 1: CV -->
     <section id="cv" data-bg="26, 24, 22" data-text="224, 220, 213">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x500/111/444?text=CV" alt="CV"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=CV" alt="CV"></div>
         <div class="snippet-info">
           <h2>CV</h2>
-          <p>Formal academic and professional record documenting milestones and technical competencies.</p>
+          <p>Formal academic record and professional trajectory.</p>
           <a href="cv.html" class="btn">View Document</a>
         </div>
       </div>
     </section>
 
-    <!-- Section 2: Art Portfolio -->
-    <section id="art" data-bg="20, 25, 30" data-text="210, 220, 230">
+    <!-- Section 2: Art -->
+    <section id="art" data-bg="15, 20, 25" data-text="200, 210, 220">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x500/111/444?text=Art+Portfolio" alt="Art"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Art+Portfolio" alt="Art"></div>
         <div class="snippet-info">
           <h2>Art Portfolio</h2>
-          <p>A curated collection of visual works spanning traditional sketches and digital media.</p>
+          <p>A collection of visual works and creative studies.</p>
           <a href="art-portfolio.html" class="btn">View Gallery</a>
         </div>
       </div>
     </section>
 
     <!-- Section 3: Scouting -->
-    <section id="scouting" data-bg="22, 30, 22" data-text="220, 235, 220">
+    <section id="scouting" data-bg="18, 25, 18" data-text="210, 225, 210">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x500/111/444?text=Scouting" alt="Scouting"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Scouting" alt="Scouting"></div>
         <div class="snippet-info">
           <h2>Scouting</h2>
-          <p>Leadership and environmental initiatives fostered through years of outdoor craft.</p>
+          <p>Leadership and environmental craftsmanship.</p>
           <a href="scouting.html" class="btn">Read More</a>
         </div>
       </div>
     </section>
 
     <!-- Section 4: Health4NOVA -->
-    <section id="health" data-bg="35, 25, 25" data-text="235, 220, 220">
+    <section id="health" data-bg="30, 18, 18" data-text="230, 210, 210">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x500/111/444?text=Health4NOVA" alt="Health"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Health4NOVA" alt="Health"></div>
         <div class="snippet-info">
           <h2>Health4NOVA</h2>
-          <p>Community health advocacy and resources for local wellness support.</p>
+          <p>Public health advocacy and resources.</p>
           <a href="health4nova.html" class="btn">View Initiative</a>
         </div>
       </div>
     </section>
 
     <!-- Section 5: Green Kites -->
-    <section id="green" data-bg="28, 30, 28" data-text="220, 230, 220">
+    <section id="green" data-bg="22, 28, 22" data-text="210, 220, 210">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x500/111/444?text=Green+Kites" alt="Green"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Green+Kites" alt="Green"></div>
         <div class="snippet-info">
           <h2>Green Kites</h2>
-          <p>Global environmental programs and sustainability efforts with the International Association.</p>
-          <a href="green-kites.html" class="btn">View Association</a>
+          <p>International environmental programs.</p>
+          <a href="green-kites.html" class="btn">Association</a>
         </div>
       </div>
     </section>
 
     <!-- Section 6: Dental Missions -->
-    <section id="dental" data-bg="25, 25, 35" data-text="225, 225, 245">
+    <section id="dental" data-bg="20, 20, 30" data-text="215, 215, 235">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x500/111/444?text=Dental+Missions" alt="Dental"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Dental+Missions" alt="Dental"></div>
         <div class="snippet-info">
           <h2>Dental Missions</h2>
-          <p>Medical outreach logs providing essential dental care to underserved regions.</p>
+          <p>Humanitarian oral healthcare logs.</p>
           <a href="dental-missions.html" class="btn">Mission Logs</a>
         </div>
       </div>
     </section>
 
     <!-- Section 7: Research -->
-    <section id="research" data-bg="22, 35, 35" data-text="225, 240, 240">
+    <section id="research" data-bg="15, 30, 30" data-text="210, 230, 230">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x500/111/444?text=Research" alt="Research"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Research" alt="Research"></div>
         <div class="snippet-info">
           <h2>Research</h2>
-          <p>Systematic investigation and data analysis within specialized scientific fields.</p>
+          <p>Scientific data analysis and publications.</p>
           <a href="research.html" class="btn">View Papers</a>
         </div>
       </div>
     </section>
 
     <!-- Section 8: Awards -->
-    <section id="awards" data-bg="35, 32, 25" data-text="245, 240, 230">
+    <section id="awards" data-bg="32, 28, 20" data-text="235, 230, 215">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x500/111/444?text=Awards" alt="Awards"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Awards" alt="Awards"></div>
         <div class="snippet-info">
           <h2>Awards</h2>
-          <p>A record of honors, grants, and citations received for professional contributions.</p>
+          <p>Honors and formal recognitions.</p>
           <a href="awards.html" class="btn">View Honors</a>
         </div>
       </div>
     </section>
 
     <!-- Section 9: Hobbies -->
-    <section id="hobbies" data-bg="15, 15, 15" data-text="255, 255, 255">
+    <section id="hobbies" data-bg="10, 10, 10" data-text="255, 255, 255">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x500/111/444?text=Hobbies" alt="Hobbies"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Hobbies" alt="Hobbies"></div>
         <div class="snippet-info">
           <h2>Hobbies</h2>
-          <p>Personal explorations and creative interests outside of formal research and work.</p>
+          <p>Personal creative pursuits.</p>
           <a href="hobbies.html" class="btn">Learn More</a>
         </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    WHITEWHYVERN &bull; <span id="year"></span>
-  </footer>
+  <footer>WHITEWHYVERN &bull; <span id="year"></span></footer>
 
   <script>
-    const halftone = document.getElementById('halftone');
+    const dotGrid = document.getElementById('dot-grid');
     const heroText = document.getElementById('heroText');
     const heroWrapper = document.getElementById('heroWrapper');
     const sections = document.querySelectorAll('main section');
 
-    // Smooth Color Blend function
+    // 1. GENERATE HALFTONE DOTS
+    // We create a dense grid of circles
+    const spacing = 35; // px between dots
+    const cols = Math.ceil(window.innerWidth / spacing) + 1;
+    const rows = Math.ceil(window.innerHeight / spacing) + 1;
+    const dots = [];
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        const x = j * spacing;
+        const y = i * spacing;
+        dot.setAttribute("cx", x);
+        dot.setAttribute("cy", y);
+        dot.setAttribute("r", "0");
+        dotGrid.appendChild(dot);
+        
+        // Calculate distance from center for radial effect
+        const dx = x - (window.innerWidth / 2);
+        const dy = y - (window.innerHeight / 2);
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        dots.push({ el: dot, dist: dist });
+      }
+    }
+
+    // 2. COLOR INTERPOLATION
     function lerpColor(c1, c2, f) {
       const r = Math.round(c1[0] + f * (c2[0] - c1[0]));
       const g = Math.round(c1[1] + f * (c2[1] - c1[1]));
@@ -290,21 +305,28 @@
 
     const lightBg = [251, 248, 243], lightText = [47, 43, 38];
 
+    // 3. SCROLL EVENT
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
       const vh = window.innerHeight;
-      
-      // 1. Move the Halftone "Curtain" up
-      // As user scrolls, we transform the overlay from bottom to top
-      const progress = Math.min(1, scrollY / (vh * 1.2));
-      halftone.style.transform = `translateY(-${progress * 100}%)`;
-      
-      // 2. Fade hero text
-      heroText.style.opacity = 1 - (progress * 3);
-      
-      // 3. Theme Color Morphing
-      let targetBg = [26, 24, 22], targetText = [224, 220, 213];
+      const maxScroll = vh * 1.5;
+      const progress = Math.min(1, scrollY / maxScroll);
 
+      // A. Halftone Radial Animation
+      // dots grow based on progress and their distance from center
+      const maxDist = Math.sqrt(Math.pow(window.innerWidth/2, 2) + Math.pow(window.innerHeight/2, 2));
+      
+      dots.forEach(dot => {
+        // This math makes dots near center grow first, then outward
+        const threshold = (dot.dist / maxDist) * 0.5; 
+        const dotProgress = Math.max(0, (progress - threshold) / 0.5);
+        // Grow dots up to 25px so they overlap and hide the image
+        dot.el.setAttribute("r", dotProgress * 30);
+      });
+
+      // B. Smooth Color Transition
+      // We detect which section is in view to set the "Target" color
+      let targetBg = [26, 24, 22], targetText = [224, 220, 213];
       sections.forEach(s => {
         const rect = s.getBoundingClientRect();
         if (rect.top <= vh/2 && rect.bottom >= vh/2) {
@@ -317,12 +339,9 @@
       document.body.style.backgroundColor = lerpColor(lightBg, targetBg, colorFactor);
       document.body.style.color = lerpColor(lightText, targetText, colorFactor);
 
-      // Visibility cleanup
-      if (progress >= 1) {
-        heroWrapper.style.visibility = 'hidden';
-      } else {
-        heroWrapper.style.visibility = 'visible';
-      }
+      // C. UI Polish
+      heroText.style.opacity = 1 - (progress * 4);
+      heroWrapper.style.visibility = (progress >= 1) ? 'hidden' : 'visible';
     });
 
     document.getElementById('year').textContent = new Date().getFullYear();
