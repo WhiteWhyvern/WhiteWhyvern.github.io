@@ -6,12 +6,10 @@
 <title>WhiteWhyvern — Portfolio</title>
 <style>
   :root {
-    /* Base Light Academia Colors */
     --c-bg-light: 251, 248, 243;
     --c-text-light: 47, 43, 38;
-    
-    /* Default Dark (used if no section active) */
-    --c-bg-dark: 26, 24, 22; 
+    /* Default darks */
+    --c-bg-dark: 26, 24, 22;
     --c-text-dark: 224, 220, 213;
   }
 
@@ -25,6 +23,7 @@
     font-family: Georgia, serif;
     overflow-x: hidden;
     line-height: 1.6;
+    /* Smooth color morphing */
     transition: background-color 0.8s ease, color 0.8s ease;
   }
 
@@ -45,8 +44,9 @@
     top: 0; left: 0;
     width: 100%; height: 100%;
     object-fit: cover;
-    mask: url(#mask-circles);
-    -webkit-mask: url(#mask-circles);
+    /* This links to the Halftone SVG Mask */
+    mask: url(#halftone-mask);
+    -webkit-mask: url(#halftone-mask);
   }
 
   .hero-content {
@@ -62,13 +62,14 @@
     font-weight: 900;
   }
 
+  /* SVG Mask - Hidden */
   #svg-mask-element { position: absolute; width: 0; height: 0; }
 
-  /* Sections Layout */
+  /* Content Layout */
   main {
     position: relative;
     z-index: 5;
-    margin-top: 140vh; 
+    margin-top: 150vh; /* Space for the scroll transition */
   }
 
   section {
@@ -77,7 +78,6 @@
     align-items: center;
     justify-content: center;
     padding: 100px 5vw;
-    /* We store the unique colors in data attributes for JS to read */
   }
 
   .container {
@@ -94,21 +94,18 @@
     background: #000;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
   }
 
   .snippet-img img {
     width: 100%; height: 100%;
     object-fit: cover;
     display: block;
-    filter: sepia(20%) contrast(110%);
+    filter: sepia(20%) grayscale(20%);
   }
 
   .snippet-info { flex: 1; }
-
-  .snippet-info h2 { font-size: 2.8rem; margin: 0 0 15px; letter-spacing: -1px; }
-
-  .snippet-info p { font-size: 1.1rem; margin-bottom: 25px; opacity: 0.85; }
+  .snippet-info h2 { font-size: 3rem; margin: 0 0 15px; letter-spacing: -1px; }
+  .snippet-info p { font-size: 1.1rem; margin-bottom: 25px; opacity: 0.8; }
 
   .btn {
     display: inline-block;
@@ -123,86 +120,90 @@
     transition: 0.3s ease;
   }
 
-  .btn:hover { background: #fff; color: #000; border-color: #fff; }
+  .btn:hover { background: #fff; color: #000; }
 
   section:nth-child(even) .container { flex-direction: row-reverse; }
 
-  footer { padding: 100px 20px; text-align: center; font-size: 0.8rem; letter-spacing: 3px; opacity: 0.6; }
+  footer { padding: 100px 20px; text-align: center; opacity: 0.5; font-size: 0.8rem; letter-spacing: 3px; }
 
   @media (max-width: 850px) {
-    .container { flex-direction: column !important; gap: 30px; }
-    .snippet-img { width: 100%; height: 280px; }
+    .container { flex-direction: column !important; text-align: center; }
   }
 </style>
 </head>
 <body>
 
-  <!-- SVG Circle Mask -->
+  <!-- The Halftone SVG Mask -->
   <svg id="svg-mask-element">
-    <mask id="mask-circles">
+    <mask id="halftone-mask">
+      <!-- White background: Image is visible -->
       <rect width="100%" height="100%" fill="white" />
-      <g id="circle-grid" fill="black"></g>
+      <!-- Black circles: Image is hidden. JS will populate these. -->
+      <g id="dot-grid" fill="black"></g>
     </mask>
   </svg>
 
   <div class="hero-wrapper" id="heroWrapper">
     <div class="hero-content" id="heroText">
       <h1>WHITEWHYVERN</h1>
-      <p style="letter-spacing: 6px; font-weight: 300; opacity: 0.7;">SCIENTIFIC &bull; ARTISTIC &bull; RESEARCH</p>
+      <p style="letter-spacing: 8px; opacity: 0.6;">SCIENTIFIC &bull; ARTISTIC &bull; RESEARCH</p>
     </div>
     <img src="https://placehold.co/2000x1400/efe7dd/8b6b4a?text=Your+Portrait" class="hero-image" id="heroImg">
   </div>
 
   <main>
-    <!-- DATA-BG: [R, G, B] | DATA-TEXT: [R, G, B] -->
-    
+    <!-- Section 1: CV -->
     <section id="cv" data-bg="26, 24, 22" data-text="224, 220, 213">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=CV" alt="CV"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=CV" alt="CV"></div>
         <div class="snippet-info">
           <h2>CV</h2>
-          <p>Formal academic and professional record.</p>
+          <p>Formal academic record and professional trajectory.</p>
           <a href="cv.html" class="btn">View Document</a>
         </div>
       </div>
     </section>
 
-    <section id="art" data-bg="22, 26, 30" data-text="210, 220, 230">
+    <!-- Section 2: Art -->
+    <section id="art" data-bg="15, 20, 25" data-text="200, 210, 220">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Art+Portfolio" alt="Art"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Art+Portfolio" alt="Art"></div>
         <div class="snippet-info">
           <h2>Art Portfolio</h2>
-          <p>Explorations of form and visual medium.</p>
+          <p>A collection of visual works and creative studies.</p>
           <a href="art-portfolio.html" class="btn">View Gallery</a>
         </div>
       </div>
     </section>
 
-    <section id="scouting" data-bg="20, 30, 20" data-text="220, 235, 220">
+    <!-- Section 3: Scouting -->
+    <section id="scouting" data-bg="18, 25, 18" data-text="210, 225, 210">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Scouting" alt="Scouting"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Scouting" alt="Scouting"></div>
         <div class="snippet-info">
           <h2>Scouting</h2>
-          <p>Leadership and outdoor resilience.</p>
+          <p>Leadership and environmental craftsmanship.</p>
           <a href="scouting.html" class="btn">Read More</a>
         </div>
       </div>
     </section>
 
-    <section id="health" data-bg="35, 20, 20" data-text="240, 220, 220">
+    <!-- Section 4: Health4NOVA -->
+    <section id="health" data-bg="30, 18, 18" data-text="230, 210, 210">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Health4NOVA" alt="Health"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Health4NOVA" alt="Health"></div>
         <div class="snippet-info">
           <h2>Health4NOVA</h2>
-          <p>Community wellness initiatives.</p>
+          <p>Public health advocacy and resources.</p>
           <a href="health4nova.html" class="btn">View Initiative</a>
         </div>
       </div>
     </section>
 
-    <section id="green" data-bg="28, 32, 25" data-text="230, 235, 220">
+    <!-- Section 5: Green Kites -->
+    <section id="green" data-bg="22, 28, 22" data-text="210, 220, 210">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Green+Kites" alt="Green Kites"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Green+Kites" alt="Green"></div>
         <div class="snippet-info">
           <h2>Green Kites</h2>
           <p>International environmental programs.</p>
@@ -211,45 +212,49 @@
       </div>
     </section>
 
-    <section id="dental" data-bg="25, 25, 35" data-text="225, 225, 245">
+    <!-- Section 6: Dental Missions -->
+    <section id="dental" data-bg="20, 20, 30" data-text="215, 215, 235">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Dental+Missions" alt="Dental"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Dental+Missions" alt="Dental"></div>
         <div class="snippet-info">
           <h2>Dental Missions</h2>
-          <p>Humanitarian healthcare missions.</p>
+          <p>Humanitarian oral healthcare logs.</p>
           <a href="dental-missions.html" class="btn">Mission Logs</a>
         </div>
       </div>
     </section>
 
-    <section id="research" data-bg="20, 35, 35" data-text="220, 240, 240">
+    <!-- Section 7: Research -->
+    <section id="research" data-bg="15, 30, 30" data-text="210, 230, 230">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Research" alt="Research"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Research" alt="Research"></div>
         <div class="snippet-info">
           <h2>Research</h2>
-          <p>Scientific inquiry and data analysis.</p>
+          <p>Scientific data analysis and publications.</p>
           <a href="research.html" class="btn">View Papers</a>
         </div>
       </div>
     </section>
 
-    <section id="awards" data-bg="38, 34, 25" data-text="245, 240, 225">
+    <!-- Section 8: Awards -->
+    <section id="awards" data-bg="32, 28, 20" data-text="235, 230, 215">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Awards" alt="Awards"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Awards" alt="Awards"></div>
         <div class="snippet-info">
           <h2>Awards</h2>
-          <p>Formal recognitions and honors.</p>
+          <p>Honors and formal recognitions.</p>
           <a href="awards.html" class="btn">View Honors</a>
         </div>
       </div>
     </section>
 
-    <section id="hobbies" data-bg="15, 15, 15" data-text="255, 255, 255">
+    <!-- Section 9: Hobbies -->
+    <section id="hobbies" data-bg="10, 10, 10" data-text="255, 255, 255">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/111/444?text=Hobbies" alt="Hobbies"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x600/111/333?text=Hobbies" alt="Hobbies"></div>
         <div class="snippet-info">
           <h2>Hobbies</h2>
-          <p>Creative pursuits outside the professional sphere.</p>
+          <p>Personal creative pursuits.</p>
           <a href="hobbies.html" class="btn">Learn More</a>
         </div>
       </div>
@@ -259,25 +264,38 @@
   <footer>WHITEWHYVERN &bull; <span id="year"></span></footer>
 
   <script>
-    const circleGrid = document.getElementById('circle-grid');
+    const dotGrid = document.getElementById('dot-grid');
     const heroText = document.getElementById('heroText');
     const heroWrapper = document.getElementById('heroWrapper');
     const sections = document.querySelectorAll('main section');
-    
-    // Create Circle Grid
-    const rows = 12, cols = 18, circles = [];
+
+    // 1. GENERATE HALFTONE DOTS
+    // We create a dense grid of circles
+    const spacing = 35; // px between dots
+    const cols = Math.ceil(window.innerWidth / spacing) + 1;
+    const rows = Math.ceil(window.innerHeight / spacing) + 1;
+    const dots = [];
+
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
-        const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        c.setAttribute("cx", `${(j / (cols - 1)) * 100}%`);
-        c.setAttribute("cy", `${(i / (rows - 1)) * 100}%`);
-        c.setAttribute("r", "0");
-        circleGrid.appendChild(c);
-        circles.push(c);
+        const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        const x = j * spacing;
+        const y = i * spacing;
+        dot.setAttribute("cx", x);
+        dot.setAttribute("cy", y);
+        dot.setAttribute("r", "0");
+        dotGrid.appendChild(dot);
+        
+        // Calculate distance from center for radial effect
+        const dx = x - (window.innerWidth / 2);
+        const dy = y - (window.innerHeight / 2);
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        dots.push({ el: dot, dist: dist });
       }
     }
 
-    // Color Interpolator
+    // 2. COLOR INTERPOLATION
     function lerpColor(c1, c2, f) {
       const r = Math.round(c1[0] + f * (c2[0] - c1[0]));
       const g = Math.round(c1[1] + f * (c2[1] - c1[1]));
@@ -287,39 +305,43 @@
 
     const lightBg = [251, 248, 243], lightText = [47, 43, 38];
 
+    // 3. SCROLL EVENT
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
       const vh = window.innerHeight;
+      const maxScroll = vh * 1.5;
+      const progress = Math.min(1, scrollY / maxScroll);
+
+      // A. Halftone Radial Animation
+      // dots grow based on progress and their distance from center
+      const maxDist = Math.sqrt(Math.pow(window.innerWidth/2, 2) + Math.pow(window.innerHeight/2, 2));
       
-      // 1. Circle Fade Logic
-      const fadeFactor = Math.min(1, scrollY / (vh * 1.5));
-      circles.forEach((c, i) => {
-        const offset = (i / circles.length) * 0.4;
-        const cFactor = Math.max(0, Math.min(1, (fadeFactor - offset) / 0.6));
-        c.setAttribute("r", `${cFactor * 16}%`);
+      dots.forEach(dot => {
+        // This math makes dots near center grow first, then outward
+        const threshold = (dot.dist / maxDist) * 0.5; 
+        const dotProgress = Math.max(0, (progress - threshold) / 0.5);
+        // Grow dots up to 25px so they overlap and hide the image
+        dot.el.setAttribute("r", dotProgress * 30);
       });
 
-      // 2. Hero Text & Cleanup
-      heroText.style.opacity = 1 - (fadeFactor * 3);
-      heroWrapper.style.visibility = (fadeFactor >= 1) ? 'hidden' : 'visible';
-
-      // 3. Section Color Morphing
+      // B. Smooth Color Transition
+      // We detect which section is in view to set the "Target" color
       let targetBg = [26, 24, 22], targetText = [224, 220, 213];
-
       sections.forEach(s => {
         const rect = s.getBoundingClientRect();
-        // If section is in the middle of the screen
         if (rect.top <= vh/2 && rect.bottom >= vh/2) {
           targetBg = s.dataset.bg.split(',').map(Number);
           targetText = s.dataset.text.split(',').map(Number);
         }
       });
 
-      // Apply color: If we are still in the hero zone, blend from light to the first dark color
-      // If we are past the hero, use the target section colors
-      const colorFactor = Math.min(1, scrollY / (vh * 1));
+      const colorFactor = Math.min(1, scrollY / (vh * 0.8));
       document.body.style.backgroundColor = lerpColor(lightBg, targetBg, colorFactor);
       document.body.style.color = lerpColor(lightText, targetText, colorFactor);
+
+      // C. UI Polish
+      heroText.style.opacity = 1 - (progress * 4);
+      heroWrapper.style.visibility = (progress >= 1) ? 'hidden' : 'visible';
     });
 
     document.getElementById('year').textContent = new Date().getFullYear();
