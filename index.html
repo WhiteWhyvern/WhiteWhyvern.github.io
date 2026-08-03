@@ -5,202 +5,286 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>WhiteWhyvern — Portfolio</title>
 <style>
-  :root{
-    --bg:#fbf8f3; --text:#2f2b26; --muted:#6e6a63; --accent:#b68b56;
-    --gap:14px; --maxw:1100px;
+  :root {
+    --bg-light: #fbf8f3;
+    --text-light: #2f2b26;
+    --accent: #b68b56;
+    --transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Georgia,serif;-webkit-font-smoothing:antialiased}
-  a{color:inherit;text-decoration:none}
 
-  /* Hero: full viewport, fades on scroll */
-  .hero{
-    position:relative; height:100vh; width:100%; overflow:hidden;
-    display:grid; place-items:end start; padding:24px;
+  * { box-sizing: border-box; }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    font-family: Georgia, serif;
+    overflow-x: hidden;
+    transition: background-color var(--transition), color var(--transition);
   }
-  .hero img{
-    position:absolute; inset:0; width:100%; height:100%;
-    object-fit:cover; filter:contrast(1.02) saturate(.98);
-    transform:translateZ(0);
-  }
-  .hero::after{ /* subtle vignette for readability */
-    content:""; position:absolute; inset:0;
-    background:linear-gradient(180deg,rgba(251,248,243,0.0) 40%, rgba(251,248,243,0.45) 70%, rgba(251,248,243,0.8) 100%);
-    pointer-events:none;
-  }
-  .hero-caption{
-    position:relative; z-index:2; color:#2f2b26; max-width:var(--maxw);
-    padding:0 12px 6vh 12px;
-  }
-  .brand{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-  .logo{width:42px;height:42px;border-radius:4px;background:linear-gradient(180deg,var(--accent),#c99a6b);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
-  .title{font-size:clamp(28px,6vw,64px);line-height:.95;margin:6px 0 4px 0;letter-spacing:-.5px}
-  .tag{color:var(--muted);font-size:14px}
 
-  /* Content area */
-  main{max-width:var(--maxw);margin:0 auto;padding:26px 16px 80px}
-
-  /* Snippet blocks grid */
-  .grid{
-    display:grid; gap:var(--gap);
-    grid-template-columns:repeat(12,1fr);
+  /* Fixed Hero Section */
+  .hero-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10;
+    pointer-events: none; /* Allows clicking through to content once faded */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-light);
   }
-  .card{
-    grid-column:span 6; min-height:220px; background:#fff; border:1px solid #ece8e3;
-    display:grid; grid-template-columns:160px 1fr; gap:12px; padding:12px; align-items:center;
-    opacity:0; transform:translateY(18px); transition:opacity .5s ease, transform .5s ease;
-  }
-  .card.reveal{opacity:1; transform:translateY(0)}
-  .card:nth-child(3n+1){grid-column:span 7}
-  .card:nth-child(3n+2){grid-column:span 5}
-  .thumb{
-    width:100%; height:180px; background:#f3eee7; border:1px solid #ece8e3; object-fit:cover;
-  }
-  .meta{padding-right:8px}
-  .meta h3{margin:0 0 6px 0; font-size:20px; color:var(--accent)}
-  .meta p{margin:0; color:var(--muted); font-size:14px}
-  .cta{margin-top:10px; display:inline-block; font-weight:700; border-bottom:2px solid var(--accent)}
 
-  /* Footer */
-  footer{text-align:center;color:var(--muted);font-size:13px;padding:22px 12px}
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* The circular mask */
+    clip-path: circle(100% at 50% 50%);
+    transition: clip-path 0.1s linear;
+  }
 
-  /* Responsive */
-  @media (max-width:980px){
-    .card{grid-column:span 12; grid-template-columns:1fr; text-align:left}
-    .thumb{height:200px}
+  .hero-text {
+    position: absolute;
+    z-index: 11;
+    text-align: center;
+    width: 100%;
+  }
+
+  .hero-text h1 {
+    font-size: clamp(3rem, 8vw, 6rem);
+    margin: 0;
+    letter-spacing: -2px;
+    text-shadow: 0 0 20px rgba(255,255,255,0.5);
+  }
+
+  /* Main Content Layout */
+  main {
+    position: relative;
+    z-index: 5;
+    margin-top: 100vh; /* Starts after the hero */
+  }
+
+  section {
+    min-height: 80vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10vh 5vw;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .container {
+    max-width: 1100px;
+    width: 100%;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+
+  /* Rectangular image one side, text other */
+  .snippet-img {
+    flex: 1;
+    height: 400px;
+    background: #333;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .snippet-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    transition: opacity 0.5s;
+  }
+
+  .snippet-info {
+    flex: 1;
+  }
+
+  .snippet-info h2 {
+    font-size: 2.5rem;
+    margin: 0 0 1rem;
+    color: inherit;
+  }
+
+  .snippet-info p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.8;
+  }
+
+  .btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    border: 1px solid currentColor;
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+  }
+
+  .btn:hover {
+    background: white;
+    color: black;
+  }
+
+  /* Alternating layout */
+  section:nth-child(even) .container {
+    flex-direction: row-reverse;
+  }
+
+  /* Color Schemes per Section */
+  .s-cv { --s-bg: #1a1816; --s-text: #e0dcd5; }
+  .s-art { --s-bg: #151a1e; --s-text: #d5dce0; }
+  .s-scout { --s-bg: #161a16; --s-text: #d6e0d5; }
+  .s-health { --s-bg: #1e1515; --s-text: #e0d5d5; }
+  .s-green { --s-bg: #1b1b14; --s-text: #dfdfd4; }
+  .s-dental { --s-bg: #19141b; --s-text: #dbd4df; }
+  .s-research { --s-bg: #141b1b; --s-text: #d4dfdf; }
+  .s-awards { --s-bg: #1f1d18; --s-text: #e7e2d9; }
+  .s-hobbies { --s-bg: #121212; --s-text: #ffffff; }
+
+  .active-section {
+    background-color: var(--s-bg) !important;
+    color: var(--s-text) !important;
+  }
+
+  footer {
+    padding: 40px;
+    text-align: center;
+    background: #000;
+    color: #555;
+  }
+
+  @media (max-width: 768px) {
+    .container { flex-direction: column !important; text-align: center; }
+    .snippet-img { width: 100%; height: 250px; }
   }
 </style>
 </head>
 <body>
 
-<section class="hero" id="hero">
-  <img src="https://placehold.co/2000x1400/efe7dd/8b6b4a?text=Your+Portrait+Placeholder" alt="Portrait of WhiteWhyvern">
-  <div class="hero-caption">
-    <div class="brand">
-      <div class="logo">WW</div>
-      <div>
-        <div style="font-weight:800">WhiteWhyvern</div>
-        <div class="tag">art • systems • light‑academia</div>
-      </div>
+  <!-- Hero with Circular Mask -->
+  <div class="hero-container" id="heroContainer">
+    <div class="hero-text" id="heroText">
+      <h1>WHITEWHYVERN</h1>
+      <p>Scroll to begin</p>
     </div>
-    <h1 class="title">Where art and structure meet</h1>
-    <div class="tag">Scroll to explore featured pages</div>
+    <img src="https://placehold.co/2000x1400/efe7dd/8b6b4a?text=Your+Portrait" class="hero-image" id="heroImg">
   </div>
-</section>
 
-<main id="content">
-  <div class="grid">
-    <a class="card" href="./cv.html">
-      <img class="thumb" src="https://placehold.co/600x400/f6efe6/9b7f63?text=CV" alt="CV preview">
-      <div class="meta">
-        <h3>CV</h3>
-        <p>Experience, education, skills — concise overview.</p>
-        <span class="cta">Open CV →</span>
+  <main>
+    <!-- Section: CV -->
+    <section class="s-cv" id="cv">
+      <div class="container">
+        <div class="snippet-img"><img src="https://placehold.co/800x600/222/eee?text=Curriculum+Vitae" alt="CV"></div>
+        <div class="snippet-info">
+          <h2>CV</h2>
+          <p>An exhaustive record of academic achievement, professional history, and core competencies.</p>
+          <a href="cv.html" class="btn">View Document</a>
+        </div>
       </div>
-    </a>
+    </section>
 
-    <a class="card" href="./art-portfolio.html">
-      <img class="thumb" src="https://placehold.co/600x800/f8f4ef/a78a5b?text=Art" alt="Art portfolio preview">
-      <div class="meta">
-        <h3>Art Portfolio</h3>
-        <p>Selected works: studies, sketches, and finished pieces.</p>
-        <span class="cta">View gallery →</span>
+    <!-- Section: Art -->
+    <section class="s-art" id="art">
+      <div class="container">
+        <div class="snippet-img"><img src="https://placehold.co/800x600/222/eee?text=Portfolio" alt="Art"></div>
+        <div class="snippet-info">
+          <h2>Art Portfolio</h2>
+          <p>Visual explorations through various media, focusing on the intersection of form and concept.</p>
+          <a href="art-portfolio.html" class="btn">View Gallery</a>
+        </div>
       </div>
-    </a>
+    </section>
 
-    <a class="card" href="./scouting.html">
-      <img class="thumb" src="https://placehold.co/600x500/efe8df/8b6b4a?text=Scouting" alt="Scouting preview">
-      <div class="meta">
-        <h3>Scouting</h3>
-        <p>Field notes, projects, and community work.</p>
-        <span class="cta">Read more →</span>
+    <!-- Section: Scouting -->
+    <section class="s-scout" id="scout">
+      <div class="container">
+        <div class="snippet-img"><img src="https://placehold.co/800x600/222/eee?text=Scouting" alt="Scouting"></div>
+        <div class="snippet-info">
+          <h2>Scouting</h2>
+          <p>Fieldwork and leadership initiatives developed through extensive outdoor and community programs.</p>
+          <a href="scouting.html" class="btn">View Projects</a>
+        </div>
       </div>
-    </a>
+    </section>
 
-    <a class="card" href="./health4nova.html">
-      <img class="thumb" src="https://placehold.co/600x500/efe7dd/8b6b4a?text=Health4NOVA" alt="Health4NOVA preview">
-      <div class="meta">
-        <h3>Health4NOVA</h3>
-        <p>Public health initiatives and outcomes.</p>
-        <span class="cta">Explore →</span>
+    <!-- Section: Health4NOVA -->
+    <section class="s-health" id="health">
+      <div class="container">
+        <div class="snippet-img"><img src="https://placehold.co/800x600/222/eee?text=Health4NOVA" alt="Health"></div>
+        <div class="snippet-info">
+          <h2>Health4NOVA</h2>
+          <p>Community wellness initiatives focused on providing accessible healthcare resources.</p>
+          <a href="health4nova.html" class="btn">Read Impacts</a>
+        </div>
       </div>
-    </a>
+    </section>
 
-    <a class="card" href="./green-kites.html">
-      <img class="thumb" src="https://placehold.co/600x700/f7f2eb/af8f66?text=Green+Kites" alt="Green Kites preview">
-      <div class="meta">
-        <h3>Green Kites International Association</h3>
-        <p>Environmental programs and impact.</p>
-        <span class="cta">Explore →</span>
+    <!-- Repeat for other sections... -->
+    <section class="s-research" id="research">
+      <div class="container">
+        <div class="snippet-img"><img src="https://placehold.co/800x600/222/eee?text=Research" alt="Research"></div>
+        <div class="snippet-info">
+          <h2>Research</h2>
+          <p>Scientific inquiries and data-driven analysis within the field of study.</p>
+          <a href="research.html" class="btn">View Papers</a>
+        </div>
       </div>
-    </a>
+    </section>
+  </main>
 
-    <a class="card" href="./dental-missions.html">
-      <img class="thumb" src="https://placehold.co/600x450/f2ebe3/9a7a56?text=Dental+Missions" alt="Dental missions preview">
-      <div class="meta">
-        <h3>Dental Missions</h3>
-        <p>Clinics, volunteers, and stories.</p>
-        <span class="cta">See details →</span>
-      </div>
-    </a>
+  <footer>
+    <p>&copy; <span id="year"></span> WHITEWHYVERN</p>
+  </footer>
 
-    <a class="card" href="./research.html">
-      <img class="thumb" src="https://placehold.co/600x450/f6efe6/9b7f63?text=Research" alt="Research preview">
-      <div class="meta">
-        <h3>Research</h3>
-        <p>Publications, experiments, and datasets.</p>
-        <span class="cta">Open →</span>
-      </div>
-    </a>
+  <script>
+    const heroImg = document.getElementById('heroImg');
+    const heroText = document.getElementById('heroText');
+    const heroContainer = document.getElementById('heroContainer');
+    const sections = document.querySelectorAll('section');
 
-    <a class="card" href="./awards.html">
-      <img class="thumb" src="https://placehold.co/600x450/f8f4ef/a78a5b?text=Awards" alt="Awards preview">
-      <div class="meta">
-        <h3>Awards/Recognition</h3>
-        <p>Honors, grants, and exhibitions.</p>
-        <span class="cta">View list →</span>
-      </div>
-    </a>
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const vh = window.innerHeight;
 
-    <a class="card" href="./hobbies.html">
-      <img class="thumb" src="https://placehold.co/600x500/efe8df/8b6b4a?text=Hobbies" alt="Hobbies preview">
-      <div class="meta">
-        <h3>Hobbies</h3>
-        <p>Personal interests and side projects.</p>
-        <span class="cta">Discover →</span>
-      </div>
-    </a>
-  </div>
-</main>
+      // 1. Circle Mask Effect
+      // As user scrolls the first 100vh, the circle shrinks from 100% to 0%
+      const percentage = Math.max(0, 100 - (scrollY / vh * 100));
+      heroImg.style.clipPath = `circle(${percentage}% at 50% 50%)`;
+      
+      // Fade text and container
+      heroText.style.opacity = 1 - (scrollY / (vh * 0.5));
+      if (percentage <= 0) {
+        heroContainer.style.display = 'none';
+      } else {
+        heroContainer.style.display = 'flex';
+      }
 
-<footer>© <span id="year"></span> WhiteWhyvern</footer>
+      // 2. Theme Switching Logic
+      sections.forEach(section => {
+        const top = section.offsetTop - (vh / 2);
+        const bottom = top + section.offsetHeight;
+        
+        if (scrollY >= top && scrollY <= bottom) {
+          document.body.style.backgroundColor = getComputedStyle(section).getPropertyValue('--s-bg');
+          document.body.style.color = getComputedStyle(section).getPropertyValue('--s-text');
+        }
+      });
+    });
 
-<script>
-  // Fade hero on scroll; stronger near the bottom of the hero
-  (function(){
-    const hero = document.getElementById('hero');
-    const year = document.getElementById('year');
-    year.textContent = new Date().getFullYear();
-
-    function onScroll(){
-      const h = hero.offsetHeight || window.innerHeight;
-      const y = Math.min(window.scrollY, h);
-      const p = y / h; // 0 -> 1
-      // Opacity eases out; clamp for safety
-      const opacity = Math.max(0, 1 - p * 1.2);
-      hero.style.opacity = opacity.toFixed(3);
-      // Subtle parallax
-      hero.style.transform = `translateY(${p * -12}px)`;
-    }
-    window.addEventListener('scroll', onScroll, {passive:true});
-    onScroll();
-
-    // Reveal cards nicely
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('reveal'); });
-    },{threshold:0.12});
-    document.querySelectorAll('.card').forEach(c=> io.observe(c));
-  })();
-</script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
