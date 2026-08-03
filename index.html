@@ -6,10 +6,14 @@
 <title>WhiteWhyvern — Portfolio</title>
 <style>
   :root {
-    --bg-light: #fbf8f3;
-    --text-light: #2f2b26;
+    /* Light Academia Colors */
+    --c-light-bg: 251, 248, 243; /* #fbf8f3 */
+    --c-light-text: 47, 43, 38;  /* #2f2b26 */
+    /* Dark Academic Colors */
+    --c-dark-bg: 26, 24, 22;     /* #1a1816 */
+    --c-dark-text: 224, 220, 213; /* #e0dcd5 */
+    
     --accent: #b68b56;
-    --transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   * { box-sizing: border-box; }
@@ -17,91 +21,94 @@
   body {
     margin: 0;
     padding: 0;
-    background-color: var(--bg-light);
-    color: var(--text-light);
+    background-color: rgb(var(--c-light-bg));
+    color: rgb(var(--c-light-text));
     font-family: Georgia, serif;
     overflow-x: hidden;
-    transition: background-color var(--transition), color var(--transition);
   }
 
-  /* Fixed Hero Section */
-  .hero-container {
+  /* Fixed Hero Layer */
+  .hero-wrapper {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
     z-index: 10;
-    pointer-events: none; /* Allows clicking through to content once faded */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-light);
+    pointer-events: none;
   }
 
   .hero-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* The circular mask */
-    clip-path: circle(100% at 50% 50%);
-    transition: clip-path 0.1s linear;
+    /* Linking the image to the SVG mask below */
+    mask: url(#mask-circles);
+    -webkit-mask: url(#mask-circles);
   }
 
-  .hero-text {
+  .hero-content {
     position: absolute;
-    z-index: 11;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
     width: 100%;
+    z-index: 12;
   }
 
-  .hero-text h1 {
-    font-size: clamp(3rem, 8vw, 6rem);
+  .hero-content h1 {
+    font-size: clamp(3rem, 10vw, 7rem);
     margin: 0;
-    letter-spacing: -2px;
-    text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    letter-spacing: -3px;
+    font-weight: 900;
   }
 
-  /* Main Content Layout */
+  /* SVG Mask setup - hidden from view */
+  #svg-mask-element {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  /* Content Sections */
   main {
     position: relative;
     z-index: 5;
-    margin-top: 100vh; /* Starts after the hero */
+    margin-top: 120vh; /* Spacing to allow scroll effect visibility */
   }
 
   section {
-    min-height: 80vh;
-    width: 100vw;
+    min-height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10vh 5vw;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 80px 5vw;
+    transition: opacity 0.6s;
   }
 
   .container {
     max-width: 1100px;
     width: 100%;
     display: flex;
-    gap: 40px;
+    gap: 60px;
     align-items: center;
   }
 
-  /* Rectangular image one side, text other */
   .snippet-img {
-    flex: 1;
-    height: 400px;
-    background: #333;
-    border-radius: 4px;
+    flex: 1.2;
+    aspect-ratio: 16 / 9;
+    background: #000;
     overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
   }
 
   .snippet-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.8;
-    transition: opacity 0.5s;
+    display: block;
+    filter: sepia(20%) contrast(110%);
   }
 
   .snippet-info {
@@ -109,33 +116,32 @@
   }
 
   .snippet-info h2 {
-    font-size: 2.5rem;
-    margin: 0 0 1rem;
-    color: inherit;
+    font-size: 2.8rem;
+    margin: 0 0 15px;
   }
 
   .snippet-info p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    opacity: 0.8;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    margin-bottom: 25px;
   }
 
   .btn {
     display: inline-block;
-    margin-top: 20px;
-    padding: 12px 24px;
+    padding: 12px 30px;
     border: 1px solid currentColor;
     text-decoration: none;
     color: inherit;
+    font-size: 0.9rem;
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s;
+    letter-spacing: 2px;
+    transition: 0.3s;
   }
 
   .btn:hover {
-    background: white;
-    color: black;
+    background: #fff;
+    color: #000;
   }
 
   /* Alternating layout */
@@ -143,145 +149,143 @@
     flex-direction: row-reverse;
   }
 
-  /* Color Schemes per Section */
-  .s-cv { --s-bg: #1a1816; --s-text: #e0dcd5; }
-  .s-art { --s-bg: #151a1e; --s-text: #d5dce0; }
-  .s-scout { --s-bg: #161a16; --s-text: #d6e0d5; }
-  .s-health { --s-bg: #1e1515; --s-text: #e0d5d5; }
-  .s-green { --s-bg: #1b1b14; --s-text: #dfdfd4; }
-  .s-dental { --s-bg: #19141b; --s-text: #dbd4df; }
-  .s-research { --s-bg: #141b1b; --s-text: #d4dfdf; }
-  .s-awards { --s-bg: #1f1d18; --s-text: #e7e2d9; }
-  .s-hobbies { --s-bg: #121212; --s-text: #ffffff; }
-
-  .active-section {
-    background-color: var(--s-bg) !important;
-    color: var(--s-text) !important;
-  }
-
   footer {
-    padding: 40px;
+    padding: 60px;
     text-align: center;
-    background: #000;
-    color: #555;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    opacity: 0.5;
   }
 
-  @media (max-width: 768px) {
-    .container { flex-direction: column !important; text-align: center; }
-    .snippet-img { width: 100%; height: 250px; }
+  @media (max-width: 850px) {
+    .container { flex-direction: column !important; gap: 30px; }
+    .snippet-img { width: 100%; }
   }
 </style>
 </head>
 <body>
 
-  <!-- Hero with Circular Mask -->
-  <div class="hero-container" id="heroContainer">
-    <div class="hero-text" id="heroText">
+  <!-- Hidden SVG for Multiple Circle Masking -->
+  <svg id="svg-mask-element">
+    <mask id="mask-circles">
+      <rect width="100%" height="100%" fill="white" />
+      <g id="circle-grid" fill="black">
+        <!-- Circles will be injected here by JavaScript -->
+      </g>
+    </mask>
+  </svg>
+
+  <div class="hero-wrapper" id="heroWrapper">
+    <div class="hero-content" id="heroText">
       <h1>WHITEWHYVERN</h1>
-      <p>Scroll to begin</p>
+      <p style="letter-spacing: 5px; opacity: 0.7;">ART &bull; SCIENCE &bull; STRUCTURE</p>
     </div>
-    <img src="https://placehold.co/2000x1400/efe7dd/8b6b4a?text=Your+Portrait" class="hero-image" id="heroImg">
+    <img src="https://placehold.co/2000x1400/efe7dd/8b6b4a?text=Your+Portrait" class="hero-image">
   </div>
 
   <main>
-    <!-- Section: CV -->
-    <section class="s-cv" id="cv">
+    <section id="cv">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/222/eee?text=Curriculum+Vitae" alt="CV"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x450/111/444?text=CV" alt="CV"></div>
         <div class="snippet-info">
           <h2>CV</h2>
-          <p>An exhaustive record of academic achievement, professional history, and core competencies.</p>
-          <a href="cv.html" class="btn">View Document</a>
+          <p>A comprehensive record of my professional journey, including formal education, technical skills, and research history.</p>
+          <a href="cv.html" class="btn">Explore History</a>
         </div>
       </div>
     </section>
 
-    <!-- Section: Art -->
-    <section class="s-art" id="art">
+    <section id="art">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/222/eee?text=Portfolio" alt="Art"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x450/111/444?text=Art" alt="Art"></div>
         <div class="snippet-info">
           <h2>Art Portfolio</h2>
-          <p>Visual explorations through various media, focusing on the intersection of form and concept.</p>
+          <p>Where creativity meets technique. A selection of works ranging from traditional sketches to digital compositions.</p>
           <a href="art-portfolio.html" class="btn">View Gallery</a>
         </div>
       </div>
     </section>
 
-    <!-- Section: Scouting -->
-    <section class="s-scout" id="scout">
+    <section id="scouting">
       <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/222/eee?text=Scouting" alt="Scouting"></div>
+        <div class="snippet-img"><img src="https://placehold.co/800x450/111/444?text=Scouting" alt="Scouting"></div>
         <div class="snippet-info">
           <h2>Scouting</h2>
-          <p>Fieldwork and leadership initiatives developed through extensive outdoor and community programs.</p>
-          <a href="scouting.html" class="btn">View Projects</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section: Health4NOVA -->
-    <section class="s-health" id="health">
-      <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/222/eee?text=Health4NOVA" alt="Health"></div>
-        <div class="snippet-info">
-          <h2>Health4NOVA</h2>
-          <p>Community wellness initiatives focused on providing accessible healthcare resources.</p>
-          <a href="health4nova.html" class="btn">Read Impacts</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Repeat for other sections... -->
-    <section class="s-research" id="research">
-      <div class="container">
-        <div class="snippet-img"><img src="https://placehold.co/800x600/222/eee?text=Research" alt="Research"></div>
-        <div class="snippet-info">
-          <h2>Research</h2>
-          <p>Scientific inquiries and data-driven analysis within the field of study.</p>
-          <a href="research.html" class="btn">View Papers</a>
+          <p>Projects and leadership roles within the scouting community, emphasizing resilience and outdoor craft.</p>
+          <a href="scouting.html" class="btn">Read More</a>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <p>&copy; <span id="year"></span> WHITEWHYVERN</p>
+    WHITEWHYVERN &bull; <span id="year"></span>
   </footer>
 
   <script>
-    const heroImg = document.getElementById('heroImg');
+    const circleGrid = document.getElementById('circle-grid');
     const heroText = document.getElementById('heroText');
-    const heroContainer = document.getElementById('heroContainer');
-    const sections = document.querySelectorAll('section');
+    const heroWrapper = document.getElementById('heroWrapper');
+    
+    // 1. Create a Grid of Circles in the SVG Mask
+    const rows = 10;
+    const cols = 15;
+    const circles = [];
 
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        // Distribute circles across the viewbox
+        circle.setAttribute("cx", `${(j / (cols - 1)) * 100}%`);
+        circle.setAttribute("cy", `${(i / (rows - 1)) * 100}%`);
+        circle.setAttribute("r", "0"); // Start with 0 radius
+        circleGrid.appendChild(circle);
+        circles.push(circle);
+      }
+    }
+
+    // 2. Smooth Color Interpolation Function
+    function lerpColor(color1, color2, factor) {
+      const r = Math.round(color1[0] + factor * (color2[0] - color1[0]));
+      const g = Math.round(color1[1] + factor * (color2[1] - color1[1]));
+      const b = Math.round(color1[2] + factor * (color2[2] - color1[2]));
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    const lightBg = [251, 248, 243];
+    const darkBg = [26, 24, 22];
+    const lightText = [47, 43, 38];
+    const darkText = [224, 220, 213];
+
+    // 3. Scroll Logic
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
       const vh = window.innerHeight;
-
-      // 1. Circle Mask Effect
-      // As user scrolls the first 100vh, the circle shrinks from 100% to 0%
-      const percentage = Math.max(0, 100 - (scrollY / vh * 100));
-      heroImg.style.clipPath = `circle(${percentage}% at 50% 50%)`;
       
-      // Fade text and container
-      heroText.style.opacity = 1 - (scrollY / (vh * 0.5));
-      if (percentage <= 0) {
-        heroContainer.style.display = 'none';
-      } else {
-        heroContainer.style.display = 'flex';
-      }
+      // Calculate scroll factor (0 to 1) over the first 1.2 viewport heights
+      const factor = Math.min(1, scrollY / (vh * 1.2));
 
-      // 2. Theme Switching Logic
-      sections.forEach(section => {
-        const top = section.offsetTop - (vh / 2);
-        const bottom = top + section.offsetHeight;
-        
-        if (scrollY >= top && scrollY <= bottom) {
-          document.body.style.backgroundColor = getComputedStyle(section).getPropertyValue('--s-bg');
-          document.body.style.color = getComputedStyle(section).getPropertyValue('--s-text');
-        }
+      // A. Animate Mask Circles
+      // We want circles to grow at slightly different times for a "seamless" feel
+      circles.forEach((circle, index) => {
+        // Individual offset based on position to create a dappled growth
+        const offset = (index / circles.length) * 0.3;
+        const circleFactor = Math.max(0, Math.min(1, (factor - offset) / 0.7));
+        // Growing radius from 0 to about 15% of the screen width
+        circle.setAttribute("r", `${circleFactor * 15}%`);
       });
+
+      // B. Smooth Color Transition
+      document.body.style.backgroundColor = lerpColor(lightBg, darkBg, factor);
+      document.body.style.color = lerpColor(lightText, darkText, factor);
+
+      // C. Hero Text and Opacity
+      heroText.style.opacity = 1 - (factor * 2);
+      if (factor >= 1) {
+        heroWrapper.style.display = 'none';
+      } else {
+        heroWrapper.style.display = 'block';
+      }
     });
 
     document.getElementById('year').textContent = new Date().getFullYear();
